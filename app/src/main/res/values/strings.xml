@@ -11,4 +11,9 @@
     <string name="wishlist">WISHLIST</string>
     <string name="check_in">CHECK IN</string>
     <string name="community">COMMUNITY</string>
+    <string name="brewed_for_you">BREWED FOR YOU</string>
+    <string name="tagline_1">Inspired by you recent cafe trips</string>
+    <string name="wheeler_s">WHEELER\'S</string>
+    <string name="aesthetic">Aesthetic</string>
+    <string name="view_details">View Details</string>
 </resources>

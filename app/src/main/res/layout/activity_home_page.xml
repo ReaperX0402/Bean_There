@@ -155,15 +155,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
+
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/explore"
-                android:fontFamily="@font/poppins_semibold"
-                android:textSize="30sp"
-                android:textColor="@color/black"
+                android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                />
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/explore"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
 
             <androidx.gridlayout.widget.GridLayout
                 android:id="@+id/explore_grid"
@@ -173,7 +173,8 @@
                 app:rowCount="2"
                 app:useDefaultMargins="true"
                 app:alignmentMode="alignMargins"
-                android:padding="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 >
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/search_btn"
@@ -282,9 +283,32 @@
                     app:iconPadding="8dp"
                     android:gravity="center"
                     />
-
-
             </androidx.gridlayout.widget.GridLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/brewed_for_you"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tagline_1"
+                android:fontFamily="@font/nunito_bold"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:layout_marginStart="10dp"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/user_recommendation_recycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
