@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Bean There</string>
+    <string name="home_header_text">BREWED JUST FOR YOU</string>
+    <string name="daily_challenge">DAILY CHALLENGE</string>
+    <string name="daily_challenge_desc">Share a coffee pic today</string>
+    <string name="plus50">+50</string>
+    <string name="explore">EXPLORE</string>
+    <string name="search_cafe">SEARCH CAFE</string>
+    <string name="nearby_cafes">NEARBY CAFES</string>
+    <string name="challenges">CHALLENGES</string>
+    <string name="wishlist">WISHLIST</string>
+    <string name="check_in">CHECK IN</string>
+    <string name="community">COMMUNITY</string>
+</resources>
