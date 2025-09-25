@@ -34,28 +34,18 @@
                 android:layout_marginStart="5dp"
                 />
 
-            <LinearLayout
-                android:id="@+id/cafe_tags"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categories_recycle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="5dp"
-                >
-
-                <!-- Example Tag -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/aesthetic"
-                    android:padding="2dp"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
-                    android:textColor="@color/black"
-                    android:background="@drawable/attribute_bg"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/nunito_bold"
-                    android:textSize="12sp"/>
-            </LinearLayout>
+                android:layout_marginTop="4dp"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/categories_label" />
 
             <!-- View Details Button -->
             <com.google.android.material.button.MaterialButton
