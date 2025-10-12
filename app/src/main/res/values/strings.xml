@@ -24,5 +24,16 @@
     <string name="location">Location : 67, Lorong Love, George Town, 10200 George Town, Pulau Pinang</string>
     <string name="view_on_map">View On Map</string>
     <string name="begin_brewing">BEGIN BREWING</string>
-    <string name="phone_no">Phone: 019-5247703</string>
+    <string name="phone_no">Phone: 019–5247703</string>
+    <string name="cafe_challenges">CAFE CHALLENGES</string>
+    <string name="challenge_details">Visit 10 cafes from you wishlist to get extra points</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="post_now">POST NOW</string>
+    <string name="rating">How would you rate this café?</string>
+    <string name="category_tag_selection">Choose up to 3 suitable tags:</string>
+    <string name="review">Write your thoughts...</string>
+    <string name="review_header">What\'s brewing in your mind? Share your coffee vibes!</string>
+    <string name="camera_tagline">Capture the perfect moment\nYour coffee, your vibes, your story</string>
+    <string name="currently_at">Currently at</string>
 </resources>
