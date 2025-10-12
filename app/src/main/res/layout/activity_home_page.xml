@@ -90,17 +90,16 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    >
+                    android:padding="10dp">
 
                     <FrameLayout
                         android:id="@+id/camera_logo"
                         android:layout_width="55dp"
                         android:layout_height="55dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         android:background="@drawable/circle_camera"
-                        >
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -113,23 +112,22 @@
                         android:id="@+id/daily_challenge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/daily_challenge"
+                        android:layout_marginStart="15dp"
                         android:fontFamily="@font/poppins_semibold"
+                        android:text="@string/daily_challenge"
                         android:textColor="@color/black"
                         android:textSize="20sp"
-                        android:layout_marginStart="15dp"
                         app:layout_constraintStart_toEndOf="@+id/camera_logo"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:fontFamily="@font/nunito_bold"
+                        android:text="@string/daily_challenge_desc"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:text="@string/daily_challenge_desc"
                         app:layout_constraintStart_toEndOf="@+id/camera_logo"
                         app:layout_constraintTop_toBottomOf="@id/daily_challenge" />
 
@@ -137,21 +135,20 @@
                         android:id="@+id/reward_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintStart_toEndOf="@id/daily_challenge"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         android:layout_marginStart="10dp"
-                        android:text="@string/plus50"
-                        android:fontFamily="@font/nunito_bold"
-                        android:textColor="@color/white"
                         android:backgroundTint="@color/matcha"
+                        android:fontFamily="@font/nunito_bold"
+                        android:text="@string/plus50"
+                        android:textColor="@color/white"
                         android:textSize="14sp"
-                        app:icon="@drawable/coffee_points"
-                        app:iconTint="@null"
-                        app:iconGravity="textEnd"
                         app:cornerRadius="30dp"
-                        />
+                        app:icon="@drawable/coffee_points"
+                        app:iconGravity="textEnd"
+                        app:iconTint="@null"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/daily_challenge"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
