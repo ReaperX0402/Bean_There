@@ -40,7 +40,7 @@
         <!-- 📷 Camera Section -->
         <LinearLayout
             android:id="@+id/camera_block"
-            android:layout_width="match_parent"
+            android:layout_width="220dp"
             android:layout_height="220dp"
             android:orientation="vertical"
             android:gravity="center"
@@ -48,6 +48,8 @@
             android:layout_marginTop="16dp"
             android:clickable="true"
             android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cafe_name">
 
             <ImageView

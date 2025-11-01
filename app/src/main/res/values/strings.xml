@@ -36,4 +36,13 @@
     <string name="review_header">What\'s brewing in your mind? Share your coffee vibes!</string>
     <string name="camera_tagline">Capture the perfect moment\nYour coffee, your vibes, your story</string>
     <string name="currently_at">Currently at</string>
+    <string name="points">POINTS:</string>
+    <string name="_1000">1000</string>
+    <string name="voucher_desc">10% Discount Voucher</string>
+    <string name="on_selected_cafes_only">On selected cafes only</string>
+    <string name="redeem_with_1000_points">Redeem with 1000 points</string>
+    <string name="my_posts">MY POSTS</string>
+    <string name="edit">EDIT</string>
+    <string name="email">darren@example.com</string>
+    <string name="username">Darren LJY</string>
 </resources>
