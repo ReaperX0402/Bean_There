@@ -55,13 +55,10 @@ class HomePage : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.community_btn).setOnClickListener {
             openDestination(MainContainer.Destination.COMMUNITY)
         }
+
     }
 
     private fun openDestination(destination: MainContainer.Destination) {
         startActivity(MainContainer.createIntent(this, destination))
-    }
-
-    companion object {
-        private const val TAG = "HomePage"
     }
 }
