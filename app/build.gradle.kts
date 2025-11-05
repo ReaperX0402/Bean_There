@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 android {
@@ -18,6 +19,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        val supabaseUrl = project.findProperty("SUPABASE_URL") as? String ?: ""
+        val supabaseAnonKey = project.findProperty("SUPABASE_ANON_KEY") as? String ?: ""
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseAnonKey\"")
     }
 
     buildTypes {
@@ -38,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     ndkVersion = "26.3.11579264"
     buildToolsVersion = "35.0.0"
@@ -59,6 +66,10 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
+    implementation(libs.supabase.kt.android)
+    implementation(libs.supabase.kt.postgrest)
+    implementation(libs.ktor.client.android)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
