@@ -50,9 +50,6 @@ class HomePage : AppCompatActivity() {
             openDestination(MainContainer.Destination.COMMUNITY)
         }
 
-        findViewById<MaterialButton>(R.id.reward_btn).setOnClickListener {
-            openDestination(MainContainer.Destination.CHALLENGES)
-        }
     }
 
     private fun openDestination(destination: MainContainer.Destination) {
