@@ -44,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     ndkVersion = "26.3.11579264"
     buildToolsVersion = "35.0.0"
