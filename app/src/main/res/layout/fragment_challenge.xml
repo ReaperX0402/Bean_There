@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".Challenge"
     android:background="@color/beige"
+    android:padding="10dp"
     >
 
     <TextView
@@ -65,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_bold"
-        android:text="@string/points"
+        android:text="@string/rewards"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"

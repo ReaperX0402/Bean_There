@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.myapplication.data.SupabaseClientProvider
 import com.google.android.material.button.MaterialButton
 
 class HomePage : AppCompatActivity() {
@@ -23,10 +22,6 @@ class HomePage : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        runCatching { SupabaseClientProvider.client }
-            .onSuccess { Log.d(TAG, "Supabase client ready") }
-            .onFailure { Log.e(TAG, "Unable to configure Supabase", it) }
 
         findViewById<ImageButton>(R.id.profile_btn).setOnClickListener {
             openDestination(MainContainer.Destination.PROFILE)
