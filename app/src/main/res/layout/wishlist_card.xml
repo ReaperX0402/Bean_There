@@ -1,73 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="200dp"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="6dp"
-    >
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <ImageView
             android:id="@+id/cafe_image"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="180dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/contact2"
-            />
+            android:src="@drawable/contact2" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/matcha"
-            >
+            android:padding="16dp"
+            android:background="@android:color/white">
+
             <TextView
                 android:id="@+id/cafe_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_semibold"
+                android:maxLines="2"
+                android:text="@string/wheeler_s"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/cafe_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/wheeler_s"
+                android:layout_marginTop="4dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:textColor="@color/beige"
-                android:textSize="20sp"
-                android:layout_marginStart="5dp"
-                />
+                android:text="@string/rating_4_2_5_0"
+                android:textColor="@color/coffee_brown"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/cafe_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:fontFamily="@font/nunito"
+                android:text="@string/location"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/categories_recycle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:clipToPadding="false"
                 android:overScrollMode="never"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/categories_label" />
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp" />
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/matcha"
-            android:gravity="end"
-            >
-            <ImageButton
-                android:id="@+id/location_btn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/location_pin_icon"
-                android:backgroundTint="@color/black"
-                />
-            <ImageButton
-                android:id="@+id/cancel_btn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/cancel_btn"
-                android:backgroundTint="@color/red"
-                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/location_btn"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/location_pin_icon"
+                    android:backgroundTint="@color/coffee_brown"
+                    android:contentDescription="@string/view_location"
+                    android:tint="@color/white" />
+
+                <ImageButton
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/cancel_btn"
+                    android:backgroundTint="@color/red"
+                    android:contentDescription="@string/remove_from_wishlist"
+                    android:tint="@color/white" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
