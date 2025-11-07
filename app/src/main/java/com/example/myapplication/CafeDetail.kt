@@ -125,7 +125,11 @@ class CafeDetail : Fragment() {
             wishlistJob?.cancel()
             wishlistJob = viewLifecycleOwner.lifecycleScope.launch {
                 try {
-                    val result = WishlistRepository.addToWishlist(userId, cafe)
+                    val result = WishlistRepository.addToWishlist(
+                        userId = userId,
+                        cafeId = cafe.cafe_id,
+                        fallbackCafe = cafe
+                    )
                     val messageRes = if (result.isNew) {
                         R.string.wishlist_add_success
                     } else {
