@@ -17,7 +17,7 @@ object UserRepository {
 
     @Serializable
     private data class UserResponse(
-        val user_id: String? = null,
+        val user_id: String,
         val username: String,
         val email: String? = null,
         val password: String,
@@ -26,7 +26,7 @@ object UserRepository {
         val created_at: String? = null
     ) {
         fun toUser(): User = User(
-            userId = user_id.orEmpty(),
+            userId = user_id,
             username = username,
             email = email,
             password = password,
@@ -116,7 +116,8 @@ object UserRepository {
     private suspend fun fetchSingleUser(builder: PostgrestFilterBuilder.() -> Unit): UserResponse? {
         val result = client.from("user")
             .select(columns = Columns.ALL) {
-                builder()
+                filter { builder() }
+                limit(1)
             }
             .decodeList<UserResponse>()
         return result.firstOrNull()
