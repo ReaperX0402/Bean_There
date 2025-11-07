@@ -15,6 +15,9 @@
     <string name="tagline_1">Inspired by you recent cafe trips</string>
     <string name="wheeler_s">WHEELER\'S</string>
     <string name="aesthetic">Aesthetic</string>
+    <string name="instagrammable">Instagrammable</string>
+    <string name="chill">Chill</string>
+    <string name="work_friendly">Work-Friendly</string>
     <string name="view_details">View Details</string>
     <string name="cafe">CAFES</string>
     <string name="search">SEARCH</string>
@@ -46,4 +49,15 @@
     <string name="email">darren@example.com</string>
     <string name="username">Darren LJY</string>
     <string name="rewards">REWARDS</string>
+    <string name="rating_format">Rating: %.1f/5.0</string>
+    <string name="rating_unavailable">Rating unavailable</string>
+    <string name="address_unavailable">Address unavailable</string>
+    <string name="operating_hours_format">Operating Hours: %1$s</string>
+    <string name="operating_hours_unavailable">Operating hours unavailable</string>
+    <string name="location_format">Location: %1$s</string>
+    <string name="location_unavailable">Location unavailable</string>
+    <string name="phone_format">Phone: %1$s</string>
+    <string name="phone_unavailable">Phone unavailable</string>
+    <string name="map_unavailable">Map location unavailable for this café</string>
+    <string name="map_app_missing">No maps app available to open this location</string>
 </resources>

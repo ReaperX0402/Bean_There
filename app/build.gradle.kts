@@ -72,4 +72,5 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:auth-kt")
     implementation("io.github.jan-tennert.supabase:storage-kt")
     implementation("io.ktor:ktor-client-android:3.3.1")
+    implementation("io.coil-kt:coil:2.6.0")
 }
