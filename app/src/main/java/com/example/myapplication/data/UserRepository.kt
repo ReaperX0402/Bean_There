@@ -3,13 +3,12 @@ package com.example.myapplication.data
 import com.example.myapplication.model.User
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
-import io.github.jan.supabase.postgrest.query.PostgrestFilterBuilder
-import io.github.jan.supabase.postgrest.result.decodeList
-import io.github.jan.supabase.postgrest.result.decodeSingle
+import io.github.jan.supabase.postgrest.query.filter.PostgrestFilterBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
 
 object UserRepository {
 
@@ -17,7 +16,7 @@ object UserRepository {
 
     @Serializable
     private data class UserResponse(
-        val user_id: String? = null,
+        val user_id: String,
         val username: String,
         val email: String? = null,
         val password: String,
@@ -26,7 +25,7 @@ object UserRepository {
         val created_at: String? = null
     ) {
         fun toUser(): User = User(
-            userId = user_id.orEmpty(),
+            userId = user_id,
             username = username,
             email = email,
             password = password,
@@ -73,7 +72,8 @@ object UserRepository {
     private suspend fun fetchSingleUser(builder: PostgrestFilterBuilder.() -> Unit): UserResponse? {
         val result = client.from("user")
             .select(columns = Columns.ALL) {
-                builder()
+                filter { builder() }
+                limit(1)
             }
             .decodeList<UserResponse>()
         return result.firstOrNull()
