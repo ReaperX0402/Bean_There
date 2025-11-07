@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,14 +15,19 @@ import com.example.myapplication.adapter.CafeAdapter
 import com.example.myapplication.adapter.CategoryAdapter
 import com.example.myapplication.data.CafeRepository
 import com.example.myapplication.model.Cafe
+import com.example.myapplication.model.Tag
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
 class SearchCafe : Fragment() {
 
-    private val categoryAdapter = CategoryAdapter()
+    private val categoryAdapter = CategoryAdapter(onTagClicked = ::onTagSelected)
     private val cafeAdapter = CafeAdapter { cafe ->
         openCafeDetail(cafe)
     }
+    private var allCafes: List<Cafe> = emptyList()
+    private var currentQuery: String = ""
+    private var selectedTagId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +45,17 @@ class SearchCafe : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupSearchBar(view)
         setupCategoryRecycler(view)
         setupCafeRecycler(view)
+    }
+
+    private fun setupSearchBar(root: View) {
+        val searchInput = root.findViewById<TextInputEditText>(R.id.search_edit_text)
+        searchInput.doAfterTextChanged { editable ->
+            currentQuery = editable?.toString()?.trim().orEmpty()
+            applyFilters()
+        }
     }
 
     private fun setupCategoryRecycler(root: View) {
@@ -55,6 +70,7 @@ class SearchCafe : Fragment() {
             try {
                 val categories = CafeRepository.getAllTags()
                 categoryAdapter.submitList(categories)
+                categoryAdapter.setSelectedTag(selectedTagId)
             } catch (error: Throwable) {
                 Log.e(TAG, "Failed to load categories", error)
             }
@@ -68,11 +84,29 @@ class SearchCafe : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val cafes = CafeRepository.getAllCafes()
-                cafeAdapter.submitList(cafes)
+                allCafes = cafes
+                applyFilters()
             } catch (error: Throwable) {
                 Log.e(TAG, "Failed to load cafes", error)
             }
         }
+    }
+
+    private fun applyFilters() {
+        val filtered = allCafes.filter { cafe ->
+            val matchesQuery = currentQuery.isBlank() ||
+                cafe.name.contains(currentQuery, ignoreCase = true)
+            val matchesTag = selectedTagId == null ||
+                cafe.tags.any { it.tag_id == selectedTagId }
+            matchesQuery && matchesTag
+        }
+        cafeAdapter.submitList(filtered)
+    }
+
+    private fun onTagSelected(tag: Tag) {
+        selectedTagId = if (selectedTagId == tag.tag_id) null else tag.tag_id
+        categoryAdapter.setSelectedTag(selectedTagId)
+        applyFilters()
     }
 
     private fun openCafeDetail(cafe: Cafe) {
