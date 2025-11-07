@@ -22,6 +22,7 @@ import com.example.myapplication.data.WishlistRepository
 import com.example.myapplication.model.Cafe
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 class CafeDetail : Fragment() {
 
@@ -127,8 +128,7 @@ class CafeDetail : Fragment() {
                 try {
                     val result = WishlistRepository.addToWishlist(
                         userId = userId,
-                        cafeId = cafe.cafe_id,
-                        fallbackCafe = cafe
+                        cafe = cafe,
                     )
                     val messageRes = if (result.isNew) {
                         R.string.wishlist_add_success
@@ -154,10 +154,10 @@ class CafeDetail : Fragment() {
         val context = requireContext()
         val uri = when {
             cafe.lat != null && cafe.long != null -> {
-                Uri.parse("geo:${cafe.lat},${cafe.long}?q=${Uri.encode(cafe.name)}")
+                "geo:${cafe.lat},${cafe.long}?q=${Uri.encode(cafe.name)}".toUri()
             }
             !cafe.address.isNullOrBlank() -> {
-                Uri.parse("geo:0,0?q=${Uri.encode(cafe.address)}")
+                "geo:0,0?q=${Uri.encode(cafe.address)}".toUri()
             }
             else -> null
         }
