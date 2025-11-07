@@ -30,9 +30,7 @@
     <string name="begin_brewing">BEGIN BREWING</string>
     <string name="phone_no">Phone: 019–5247703</string>
     <string name="cafe_challenges">CAFE CHALLENGES</string>
-    <string name="challenge_details">Visit 10 cafes from you wishlist to get extra points</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="challenge_details">Visit 10 more cafes from your wishlist to get extra points</string>
     <string name="post_now">POST NOW</string>
     <string name="rating">How would you rate this café?</string>
     <string name="category_tag_selection">Choose up to 3 suitable tags:</string>
@@ -61,8 +59,6 @@
     <string name="phone_unavailable">Phone unavailable</string>
     <string name="map_unavailable">Map location unavailable for this café</string>
     <string name="map_app_missing">No maps app available to open this location</string>
-
-    <!-- Authentication -->
     <string name="login_title">Welcome back</string>
     <string name="login_subtitle">Log in to continue exploring cafés near you.</string>
     <string name="login_action">Log In</string>
