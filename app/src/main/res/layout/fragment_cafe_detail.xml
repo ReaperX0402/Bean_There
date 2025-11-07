@@ -138,7 +138,7 @@
         tools:text="@string/phone_no"
         />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/add_to_wishlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -146,9 +146,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/phone_no"
         android:layout_marginTop="5dp"
-        android:text="@string/begin_brewing"
+        android:text="@string/add_to_wishlist"
         android:fontFamily="@font/nunito_bold"
         android:backgroundTint="@color/coffee_brown"
-        />
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        app:cornerRadius="12dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

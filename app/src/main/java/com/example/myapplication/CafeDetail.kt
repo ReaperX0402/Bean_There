@@ -7,20 +7,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.myapplication.adapter.CategoryAdapter
+import com.example.myapplication.data.UserSessionManager
+import com.example.myapplication.data.WishlistRepository
 import com.example.myapplication.model.Cafe
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class CafeDetail : Fragment() {
 
     private var cafe: Cafe? = null
     private lateinit var categoryAdapter: CategoryAdapter
+    private var wishlistJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +57,12 @@ class CafeDetail : Fragment() {
         categoriesRecycler.adapter = categoryAdapter
 
         cafe?.let { bindCafe(view, it) }
+        setupWishlistButton(view)
+    }
+
+    override fun onDestroyView() {
+        wishlistJob?.cancel()
+        super.onDestroyView()
     }
 
     private fun bindCafe(root: View, cafe: Cafe) {
@@ -90,6 +103,47 @@ class CafeDetail : Fragment() {
         viewOnMap.setOnClickListener { openMap(cafe) }
 
         categoryAdapter.submitList(cafe.tags)
+    }
+
+    private fun setupWishlistButton(root: View) {
+        val button = root.findViewById<Button>(R.id.add_to_wishlist)
+        button.setOnClickListener {
+            val cafe = cafe
+            if (cafe == null) {
+                Toast.makeText(requireContext(), R.string.error_generic, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val userId = UserSessionManager.getUserId(requireContext())
+            if (userId.isNullOrBlank()) {
+                Toast.makeText(requireContext(), R.string.wishlist_requires_login, Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            button.isEnabled = false
+            wishlistJob?.cancel()
+            wishlistJob = viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    val result = WishlistRepository.addToWishlist(userId, cafe.cafe_id)
+                    val messageRes = if (result.isNew) {
+                        R.string.wishlist_add_success
+                    } else {
+                        R.string.wishlist_already_exists
+                    }
+                    Toast.makeText(requireContext(), messageRes, Toast.LENGTH_SHORT).show()
+                } catch (error: Throwable) {
+                    Log.e(TAG, "Failed to add cafe to wishlist", error)
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.wishlist_add_failure,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } finally {
+                    button.isEnabled = true
+                }
+            }
+        }
     }
 
     private fun openMap(cafe: Cafe) {
