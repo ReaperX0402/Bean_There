@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/nunito"
                 android:text="@string/location"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
