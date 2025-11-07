@@ -82,22 +82,17 @@ object WishlistRepository {
             .mapNotNull { it.toWishlistItem() }
     }
 
-    suspend fun addToWishlist(
-        userId: String,
-        cafeId: String,
-        fallbackCafe: Cafe? = null
-    ): WishlistAddResult = withContext(Dispatchers.IO) {
+    suspend fun addToWishlist(userId: String, cafe: Cafe): WishlistAddResult = withContext(Dispatchers.IO) {
         val existing = client.from("wishlist")
             .select(columns = SELECT_COLUMNS) {
                 filter {
                     eq("user_id", userId)
-                    eq("cafe_id", cafeId)
+                    eq("cafe_id", cafe.cafe_id)
                 }
                 limit(1)
             }
             .decodeList<WishlistResponse>()
-            .mapNotNull { it.toWishlistItem(fallbackCafe = fallbackCafe) }
-            .firstOrNull()
+            .firstNotNullOfOrNull { it.toWishlistItem(fallbackCafe = cafe) }
 
         if (existing != null) {
             return@withContext WishlistAddResult(existing, false)
@@ -107,13 +102,13 @@ object WishlistRepository {
             .insert(
                 mapOf(
                     "user_id" to userId,
-                    "cafe_id" to cafeId
+                    "cafe_id" to cafe.cafe_id
                 )
             ) {
                 select(columns = SELECT_COLUMNS)
             }
             .decodeSingle<WishlistResponse>()
-            .toWishlistItem(fallbackCafe = fallbackCafe)
+            .toWishlistItem(fallbackCafe = cafe)
             ?: throw IllegalStateException("Wishlist item missing cafe data")
         WishlistAddResult(created, true)
     }
