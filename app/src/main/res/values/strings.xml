@@ -61,4 +61,24 @@
     <string name="phone_unavailable">Phone unavailable</string>
     <string name="map_unavailable">Map location unavailable for this café</string>
     <string name="map_app_missing">No maps app available to open this location</string>
+
+    <!-- Authentication -->
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Log in to continue exploring cafés near you.</string>
+    <string name="login_action">Log In</string>
+    <string name="login_no_account">Don't have an account?</string>
+    <string name="login_sign_up">Create one now</string>
+    <string name="sign_up_title">Create Account</string>
+    <string name="sign_up_subtitle">Join Bean There and start discovering cafés.</string>
+    <string name="sign_up_action">Sign Up</string>
+    <string name="sign_up_back_to_login">Back to Log In</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_email">Email</string>
+    <string name="error_missing_credentials">Please fill in all fields.</string>
+    <string name="error_password_mismatch">Passwords do not match.</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="login_success">Welcome back, %1$s!</string>
+    <string name="sign_up_success">Account created for %1$s</string>
 </resources>
