@@ -3,9 +3,7 @@ package com.example.myapplication.data
 import com.example.myapplication.model.User
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
-import io.github.jan.supabase.postgrest.query.PostgrestFilterBuilder
-import io.github.jan.supabase.postgrest.result.decodeList
-import io.github.jan.supabase.postgrest.result.decodeSingle
+import io.github.jan.supabase.postgrest.query.filter.PostgrestFilterBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
@@ -93,7 +91,7 @@ object UserRepository {
         val conflictingUser = fetchSingleUser {
             eq("username", username)
         }
-        if (conflictingUser != null && conflictingUser.user_id != null && conflictingUser.user_id != userId) {
+        if (conflictingUser != null && conflictingUser.user_id != userId) {
             throw IllegalArgumentException("Username already taken")
         }
 
