@@ -1,19 +1,27 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.CafeDetail
 import com.example.myapplication.adapter.CafeAdapter
 import com.example.myapplication.adapter.CategoryAdapter
+import com.example.myapplication.data.CafeRepository
 import com.example.myapplication.model.Cafe
-import com.example.myapplication.model.Tag
+import kotlinx.coroutines.launch
 
 class SearchCafe : Fragment() {
+
+    private val categoryAdapter = CategoryAdapter()
+    private val cafeAdapter = CafeAdapter { cafe ->
+        openCafeDetail(cafe)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,51 +45,46 @@ class SearchCafe : Fragment() {
 
     private fun setupCategoryRecycler(root: View) {
         val categoriesRecycler = root.findViewById<RecyclerView>(R.id.categories_recycle)
-        val categoryAdapter = CategoryAdapter()
         categoriesRecycler.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.HORIZONTAL,
             false
         )
         categoriesRecycler.adapter = categoryAdapter
-
-        val categories = listOf(
-            Tag(tag_id = "1", tag_name = getString(R.string.aesthetic)),
-            Tag(tag_id = "2", tag_name = getString(R.string.instagrammable)),
-            Tag(tag_id = "3", tag_name = getString(R.string.chill)),
-            Tag(tag_id = "4", tag_name = getString(R.string.work_friendly))
-        )
-        categoryAdapter.submitList(categories)
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val categories = CafeRepository.getAllTags()
+                categoryAdapter.submitList(categories)
+            } catch (error: Throwable) {
+                Log.e(TAG, "Failed to load categories", error)
+            }
+        }
     }
 
     private fun setupCafeRecycler(root: View) {
         val cafeRecycler = root.findViewById<RecyclerView>(R.id.cafe_recycle)
-        val cafeAdapter = CafeAdapter()
-        cafeRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        cafeRecycler.layoutManager = LinearLayoutManager(requireContext())
         cafeRecycler.adapter = cafeAdapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val cafes = CafeRepository.getAllCafes()
+                cafeAdapter.submitList(cafes)
+            } catch (error: Throwable) {
+                Log.e(TAG, "Failed to load cafes", error)
+            }
+        }
+    }
 
-        val cafes = listOf(
-            Cafe(
-                cafe_id = "cafe_1",
-                name = "Wheeler's Yard",
-                address = "28 Lor Ampas, Singapore",
-                rating_avg = 4.5,
-                tags = listOf(
-                    Tag(tag_id = "1", tag_name = getString(R.string.aesthetic)),
-                    Tag(tag_id = "3", tag_name = getString(R.string.chill))
-                )
-            ),
-            Cafe(
-                cafe_id = "cafe_2",
-                name = "Atlas Coffeehouse",
-                address = "6 Duke's Rd, Singapore",
-                rating_avg = 4.7,
-                tags = listOf(
-                    Tag(tag_id = "2", tag_name = getString(R.string.instagrammable)),
-                    Tag(tag_id = "4", tag_name = getString(R.string.work_friendly))
-                )
-            )
-        )
-        cafeAdapter.submitList(cafes)
+    private fun openCafeDetail(cafe: Cafe) {
+        parentFragmentManager
+            .beginTransaction()
+            .setReorderingAllowed(true)
+            .replace(R.id.fragment_container, CafeDetail.newInstance(cafe))
+            .addToBackStack(null)
+            .commit()
+    }
+
+    companion object {
+        private const val TAG = "SearchCafe"
     }
 }

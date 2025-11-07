@@ -13,10 +13,11 @@
         android:id="@+id/cafe_image"
         android:layout_width="match_parent"
         android:layout_height="270dp"
+        android:contentDescription="@null"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        tools:src="@drawable/contact2" />
 
     <TextView
         android:id="@+id/cafe_name"
@@ -27,9 +28,10 @@
         app:layout_constraintTop_toBottomOf="@+id/cafe_image"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="@string/wheeler_s"
+        android:text=""
         android:textSize="30sp"
         android:textColor="@color/black"
+        tools:text="@string/wheeler_s"
         />
 
     <View
@@ -66,9 +68,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/nunito_bold"
-        android:text="@string/rating_4_2_5_0"
+        android:text=""
         android:textSize="20sp"
         android:textColor="@color/black"
+        tools:text="@string/rating_4_2_5_0"
         />
 
     <TextView
@@ -81,9 +84,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/nunito_bold"
-        android:text="@string/operating_hours"
+        android:text=""
         android:textSize="20sp"
         android:textColor="@color/black"
+        tools:text="@string/operating_hours"
         />
 
     <TextView
@@ -96,9 +100,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/nunito_bold"
-        android:text="@string/location"
+        android:text=""
         android:textSize="20sp"
         android:textColor="@color/black"
+        tools:text="@string/location"
         />
 
     <TextView
@@ -127,9 +132,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/nunito_bold"
-        android:text="@string/phone_no"
+        android:text=""
         android:textSize="20sp"
         android:textColor="@color/black"
+        tools:text="@string/phone_no"
         />
 
     <Button
