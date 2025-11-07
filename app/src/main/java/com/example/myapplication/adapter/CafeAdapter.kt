@@ -36,7 +36,7 @@ class CafeAdapter : RecyclerView.Adapter<CafeAdapter.CafeViewHolder>() {
         private val cafeImage: ImageView = itemView.findViewById(R.id.cafe_image)
         private val cafeName: TextView = itemView.findViewById(R.id.cafe_name)
         private val categoriesRecycler: RecyclerView = itemView.findViewById(R.id.categories_recycle)
-        private val categoryAdapter = CategoryAdapter()
+        private val categoryAdapter = CategoryAdapter(R.layout.item_category_button_small)
 
         init {
             categoriesRecycler.layoutManager = LinearLayoutManager(

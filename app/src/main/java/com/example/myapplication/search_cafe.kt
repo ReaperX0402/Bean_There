@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adapter.CafeAdapter
@@ -56,11 +57,7 @@ class SearchCafe : Fragment() {
     private fun setupCafeRecycler(root: View) {
         val cafeRecycler = root.findViewById<RecyclerView>(R.id.cafe_recycle)
         val cafeAdapter = CafeAdapter()
-        cafeRecycler.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
+        cafeRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         cafeRecycler.adapter = cafeAdapter
 
         val cafes = listOf(

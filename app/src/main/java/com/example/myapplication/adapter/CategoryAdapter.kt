@@ -3,12 +3,15 @@ package com.example.myapplication.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.model.Tag
 import com.google.android.material.button.MaterialButton
 
-class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(
+    @LayoutRes private val itemLayout: Int = R.layout.item_category_button
+) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     private val categories: MutableList<Tag> = mutableListOf()
 
@@ -20,7 +23,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_category_button, parent, false)
+            .inflate(itemLayout, parent, false)
         return CategoryViewHolder(view)
     }
 
