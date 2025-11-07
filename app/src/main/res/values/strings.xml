@@ -66,7 +66,7 @@
     <string name="login_title">Welcome back</string>
     <string name="login_subtitle">Log in to continue exploring cafés near you.</string>
     <string name="login_action">Log In</string>
-    <string name="login_no_account">Do not have an account?</string>
+    <string name="login_no_account">Don't have an account?</string>
     <string name="login_sign_up">Create one now</string>
     <string name="sign_up_title">Create Account</string>
     <string name="sign_up_subtitle">Join Bean There and start discovering cafés.</string>
@@ -81,4 +81,17 @@
     <string name="error_generic">Something went wrong. Please try again.</string>
     <string name="login_success">Welcome back, %1$s!</string>
     <string name="sign_up_success">Account created for %1$s</string>
+    <string name="profile_username_placeholder">Your username</string>
+    <string name="profile_email_placeholder">your@email.com</string>
+    <string name="profile_member_since">Member since %1$s</string>
+    <string name="profile_member_since_placeholder">Member since —</string>
+    <string name="profile_not_found">We couldn't find your profile.</string>
+    <string name="profile_requires_login">Log in to view your profile information.</string>
+    <string name="edit_profile_title">Edit Profile</string>
+    <string name="edit_profile_subtitle">Update your account details below.</string>
+    <string name="edit_profile_action">Save Changes</string>
+    <string name="edit_profile_success">Profile updated successfully.</string>
+    <string name="edit_profile_back">Back to Profile</string>
+    <string name="hint_new_password">New Password (optional)</string>
+    <string name="hint_confirm_new_password">Confirm New Password</string>
 </resources>

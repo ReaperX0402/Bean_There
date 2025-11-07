@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.data.UserRepository
+import com.example.myapplication.data.UserSessionManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
@@ -60,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
                 UserRepository.login(username, password)
             }.onSuccess { user ->
                 showLoading(false)
+                UserSessionManager.saveUser(this@LoginActivity, user)
                 Toast.makeText(
                     this@LoginActivity,
                     getString(R.string.login_success, user.username),

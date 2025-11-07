@@ -3,12 +3,13 @@ package com.example.myapplication.data
 import com.example.myapplication.model.User
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
-import io.github.jan.supabase.postgrest.query.filter.PostgrestFilterBuilder
+import io.github.jan.supabase.postgrest.query.PostgrestFilterBuilder
+import io.github.jan.supabase.postgrest.result.decodeList
+import io.github.jan.supabase.postgrest.result.decodeSingle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
 
 object UserRepository {
 
@@ -43,7 +44,11 @@ object UserRepository {
             throw IllegalArgumentException("Incorrect password")
         }
 
-        remoteUser.toUser().copy(password = "")
+        val user = remoteUser.toUser().copy(password = "")
+        if (user.userId.isBlank()) {
+            throw IllegalStateException("Account is missing an identifier")
+        }
+        user
     }
 
     suspend fun signUp(username: String, email: String, password: String): User = withContext(Dispatchers.IO) {
@@ -66,7 +71,46 @@ object UserRepository {
             }
             .decodeSingle<UserResponse>()
 
-        insertedUser.toUser().copy(password = "")
+        val user = insertedUser.toUser().copy(password = "")
+        if (user.userId.isBlank()) {
+            throw IllegalStateException("Account is missing an identifier")
+        }
+        user
+    }
+
+    suspend fun getUserById(userId: String): User? = withContext(Dispatchers.IO) {
+        fetchSingleUser {
+            eq("user_id", userId)
+        }?.toUser()?.copy(password = "")
+    }
+
+    suspend fun updateUser(
+        userId: String,
+        username: String,
+        email: String,
+        newPassword: String?
+    ): User = withContext(Dispatchers.IO) {
+        val conflictingUser = fetchSingleUser {
+            eq("username", username)
+        }
+        if (conflictingUser != null && conflictingUser.user_id != null && conflictingUser.user_id != userId) {
+            throw IllegalArgumentException("Username already taken")
+        }
+
+        client.from("user")
+            .update({
+                set("username", username)
+                set("email", email)
+                if (!newPassword.isNullOrBlank()) {
+                    set("password", newPassword)
+                }
+            }) {
+                filter { eq("user_id", userId) }
+                select(columns = Columns.ALL)
+            }
+            .decodeSingle<UserResponse>()
+            .toUser()
+            .copy(password = "")
     }
 
     private suspend fun fetchSingleUser(builder: PostgrestFilterBuilder.() -> Unit): UserResponse? {
