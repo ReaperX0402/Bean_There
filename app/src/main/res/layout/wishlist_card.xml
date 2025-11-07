@@ -55,12 +55,14 @@
             android:gravity="end"
             >
             <ImageButton
+                android:id="@+id/location_btn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@drawable/location_pin_icon"
                 android:backgroundTint="@color/black"
                 />
             <ImageButton
+                android:id="@+id/cancel_btn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@drawable/cancel_btn"
