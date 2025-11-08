@@ -2,6 +2,7 @@ package com.example.myapplication.data
 
 import android.content.Context
 import com.example.myapplication.model.User
+import androidx.core.content.edit
 
 object UserSessionManager {
 
@@ -12,11 +13,11 @@ object UserSessionManager {
 
     fun saveUser(context: Context, user: User) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit()
-            .putString(KEY_USER_ID, user.userId)
-            .putString(KEY_USERNAME, user.username)
-            .putString(KEY_EMAIL, user.email)
-            .apply()
+        prefs.edit {
+            putString(KEY_USER_ID, user.userId)
+                .putString(KEY_USERNAME, user.username)
+                .putString(KEY_EMAIL, user.email)
+        }
     }
 
     fun getUserId(context: Context): String? {

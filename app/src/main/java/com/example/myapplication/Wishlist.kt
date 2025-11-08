@@ -78,10 +78,10 @@ class Wishlist : Fragment() {
         val cafe = item.cafe
         val uri = when {
             cafe.lat != null && cafe.long != null -> {
-                Uri.parse("geo:${cafe.lat},${cafe.long}?q=${Uri.encode(cafe.name)}")
+                "geo:${cafe.lat},${cafe.long}?q=${Uri.encode(cafe.name)}".toUri()
             }
             !cafe.address.isNullOrBlank() -> {
-                Uri.parse("geo:0,0?q=${Uri.encode(cafe.address)}")
+                "geo:0,0?q=${Uri.encode(cafe.address)}".toUri()
             }
             else -> null
         }

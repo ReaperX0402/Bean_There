@@ -106,8 +106,7 @@ object WishlistRepository {
                 limit(1)
             }
             .decodeList<WishlistResponse>()
-            .mapNotNull { it.toWishlistItem(fallbackCafe = cafe) }
-            .firstOrNull()
+            .firstNotNullOfOrNull { it.toWishlistItem(fallbackCafe = cafe) }
 
         if (existing != null) {
             return@withContext WishlistAddResult(existing, false)
