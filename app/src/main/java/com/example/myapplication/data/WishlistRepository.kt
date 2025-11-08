@@ -58,16 +58,17 @@ object WishlistRepository {
 
     @Serializable
     private data class WishlistResponse(
-        @SerialName("wishlist_id") val wishlistId: String,
-        @SerialName("cafe_id")    val cafeId: String,
-        @SerialName("added_at")   val addedAt: String? = null,
+        val wishlist_id: String,
+        val cafe_id: String,
+        val created_at: String? = null,
         val cafe: WishlistCafeResponse? = null
     ) {
         fun toWishlistItem(fallbackCafe: Cafe? = null): WishlistItem? {
             val cafe = cafe?.toCafe() ?: fallbackCafe ?: return null
             return WishlistItem(
-                id = wishlistId,
-                cafe = cafe
+                id = wishlist_id,
+                cafe = cafe,
+                createdAt = created_at
             )
         }
     }
@@ -76,7 +77,7 @@ object WishlistRepository {
         val responses = client.from("wishlist")
             .select(columns = SELECT_COLUMNS) {
                 filter { eq("user_id", userId) }
-                order(column = "added_at", order = Order.DESCENDING)
+                order(column = "created_at", order = Order.DESCENDING)
             }
             .decodeList<WishlistResponse>()
 
@@ -86,7 +87,7 @@ object WishlistRepository {
 
         val fallbackById = buildFallbackCafes(responses)
         responses.mapNotNull { response ->
-            val fallbackCafe = fallbackById[response.cafeId]
+            val fallbackCafe = fallbackById[response.cafe_id]
             response.toWishlistItem(fallbackCafe = fallbackCafe)
         }
     }
@@ -159,7 +160,7 @@ object WishlistRepository {
 
     private const val DEFAULT_IMAGE_BUCKET = "cafe-images"
     private val SELECT_COLUMNS = Columns.raw(
-        "wishlist_id, cafe_id, added_at, cafe:cafe_id(*, cafe_tag(tag(*)))"
+        "wishlist_id, cafe_id, created_at, cafe:cafe_id(*, cafe_tag(tag(*)))"
     )
 
     private suspend fun buildFallbackCafes(
@@ -167,7 +168,7 @@ object WishlistRepository {
     ): Map<String, Cafe> {
         val missingIds = responses
             .filter { it.cafe == null }
-            .map { it.cafeId }
+            .map { it.cafe_id }
             .distinct()
 
         if (missingIds.isEmpty()) {
