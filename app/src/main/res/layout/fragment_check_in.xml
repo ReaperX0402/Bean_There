@@ -40,34 +40,52 @@
             android:layout_marginTop="4dp" />
 
         <!-- 📷 Camera Section -->
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/camera_block"
             android:layout_width="220dp"
             android:layout_height="220dp"
-            android:orientation="vertical"
-            android:gravity="center"
             android:background="@drawable/dotted_border_box"
             android:layout_marginTop="16dp"
             android:clickable="true"
             android:focusable="true"
+            android:clipToOutline="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cafe_name">
 
             <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/camera_icon"
-                app:tint="@color/coffee_brown" />
+                android:id="@+id/camera_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/review_captured_photo_content_description"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/camera_tagline"
+            <LinearLayout
+                android:id="@+id/camera_prompt_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:textColor="@color/coffee_brown"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/camera_icon"
+                    app:tint="@color/coffee_brown" />
+
+                <TextView
+                    android:id="@+id/camera_tagline_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/camera_tagline"
+                    android:textColor="@color/coffee_brown"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </FrameLayout>
 
         <!-- 💬 Review Text -->
         <TextView
@@ -154,6 +172,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="10dp"
             />
+
+        <ProgressBar
+            android:id="@+id/post_progress"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/post_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

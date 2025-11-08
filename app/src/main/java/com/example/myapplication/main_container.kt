@@ -10,10 +10,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.myapplication.model.Cafe
 
 class MainContainer : AppCompatActivity() {
 
     private var currentDestination: Destination? = null
+    private var pendingCheckInCafe: Cafe? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,8 @@ class MainContainer : AppCompatActivity() {
             navigateTo(Destination.PROFILE)
         }
 
+        pendingCheckInCafe = intentReviewCafe(intent)
+
         if (savedInstanceState == null) {
             val initialDestination = intentDestination(intent) ?: Destination.SEARCH
             navigateTo(initialDestination)
@@ -45,7 +49,10 @@ class MainContainer : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        intentDestination(intent)?.let { navigateTo(it) }
+        pendingCheckInCafe = intentReviewCafe(intent)
+        val destination = intentDestination(intent)
+            ?: if (pendingCheckInCafe != null) Destination.CHECK_IN else null
+        destination?.let { navigateTo(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -63,15 +70,30 @@ class MainContainer : AppCompatActivity() {
         }
     }
 
-    private fun navigateTo(destination: Destination) {
-        if (destination == currentDestination) return
+    fun navigateTo(destination: Destination, cafe: Cafe? = null) {
+        val targetCafe = if (destination == Destination.CHECK_IN) {
+            cafe ?: pendingCheckInCafe
+        } else {
+            null
+        }
+
+        if (destination == currentDestination && (destination != Destination.CHECK_IN || targetCafe == null)) {
+            return
+        }
+
+        if (destination != Destination.CHECK_IN) {
+            pendingCheckInCafe = null
+        }
 
         val fragment = when (destination) {
             Destination.SEARCH -> SearchCafe()
             Destination.NEARBY -> CafeMaps()
             Destination.CHALLENGES -> Challenge()
             Destination.WISHLIST -> Wishlist()
-            Destination.CHECK_IN -> CheckIn()
+            Destination.CHECK_IN -> {
+                pendingCheckInCafe = null
+                targetCafe?.let { CheckIn.newInstance(it) } ?: CheckIn()
+            }
             Destination.COMMUNITY -> Community()
             Destination.PROFILE -> Profile()
         }
@@ -82,6 +104,16 @@ class MainContainer : AppCompatActivity() {
             .commit()
 
         currentDestination = destination
+    }
+
+    private fun intentReviewCafe(intent: Intent?): Cafe? {
+        if (intent == null) return null
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getSerializableExtra(EXTRA_REVIEW_CAFE, Cafe::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getSerializableExtra(EXTRA_REVIEW_CAFE) as? Cafe
+        }
     }
 
     enum class Destination {
@@ -96,11 +128,13 @@ class MainContainer : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_DESTINATION = "com.example.myapplication.extra.DESTINATION"
+        private const val EXTRA_REVIEW_CAFE = "com.example.myapplication.extra.REVIEW_CAFE"
         private const val STATE_DESTINATION = "com.example.myapplication.state.DESTINATION"
 
-        fun createIntent(context: Context, destination: Destination): Intent {
+        fun createIntent(context: Context, destination: Destination, cafe: Cafe? = null): Intent {
             return Intent(context, MainContainer::class.java).apply {
                 putExtra(EXTRA_DESTINATION, destination)
+                cafe?.let { putExtra(EXTRA_REVIEW_CAFE, it) }
             }
         }
     }

@@ -86,6 +86,16 @@
                     android:tint="@color/white" />
 
                 <ImageButton
+                    android:id="@+id/check_in_btn"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/camera_icon"
+                    android:backgroundTint="@color/coffee_brown"
+                    android:contentDescription="@string/open_check_in"
+                    android:tint="@color/white" />
+
+                <ImageButton
                     android:id="@+id/cancel_btn"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
