@@ -48,7 +48,8 @@ class Wishlist : Fragment() {
         val recyclerView = root.findViewById<RecyclerView>(R.id.wishlist_recycle)
         wishlistAdapter = WishlistAdapter(
             onOpenLocation = ::openLocation,
-            onRemove = ::removeFromWishlist
+            onRemove = ::removeFromWishlist,
+            onCheckIn = ::openCheckIn
         )
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = wishlistAdapter
@@ -120,6 +121,22 @@ class Wishlist : Fragment() {
                 Toast.makeText(requireContext(), R.string.wishlist_remove_failure, Toast.LENGTH_SHORT)
                     .show()
             }
+        }
+    }
+
+    private fun openCheckIn(item: WishlistItem) {
+        val cafe = item.cafe
+        val activity = activity
+        if (activity is MainContainer) {
+            activity.navigateTo(MainContainer.Destination.CHECK_IN, cafe)
+        } else {
+            val context = requireContext()
+            val intent = MainContainer.createIntent(
+                context,
+                MainContainer.Destination.CHECK_IN,
+                cafe
+            )
+            startActivity(intent)
         }
     }
 
