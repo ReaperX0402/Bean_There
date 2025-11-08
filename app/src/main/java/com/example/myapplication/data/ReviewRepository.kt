@@ -1,6 +1,5 @@
 package com.example.myapplication.data
 
-import io.github.jan.supabase.postgrest.decodeSingle
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,7 @@ object ReviewRepository {
     private const val REVIEW_TAG_TABLE = "review_tag"
     private const val STORAGE_BUCKET = "photos"
     private const val STORAGE_PATH_PREFIX = "reviews/"
-    private const val PUBLIC_REVIEW_BASE_URL = "https://xyz.supabase.co/storage/v1/object/public/photos/reviews/"
+    private const val PUBLIC_REVIEW_BASE_URL = "https://gaotkltiafwezuzegkkz.supabase.co/storage/v1/object/public/photos/reviews/"
 
     private val client get() = SupabaseProvider.client
 
@@ -89,7 +88,7 @@ object ReviewRepository {
                 path = remotePath,
                 data = bytes,
                 upsert = false,
-                contentType = contentType
+                contentType = contentType,
             )
 
         PUBLIC_REVIEW_BASE_URL + fileName
