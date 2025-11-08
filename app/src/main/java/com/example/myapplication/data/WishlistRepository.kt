@@ -59,6 +59,7 @@ object WishlistRepository {
     @Serializable
     private data class WishlistResponse(
         val wishlist_id: String,
+        val cafe_id: String,
         val created_at: String? = null,
         val cafe: WishlistCafeResponse? = null
     ) {
@@ -73,21 +74,34 @@ object WishlistRepository {
     }
 
     suspend fun getWishlist(userId: String): List<WishlistItem> = withContext(Dispatchers.IO) {
-        client.from("wishlist")
+        val responses = client.from("wishlist")
             .select(columns = SELECT_COLUMNS) {
                 filter { eq("user_id", userId) }
                 order(column = "created_at", order = Order.DESCENDING)
             }
             .decodeList<WishlistResponse>()
-            .mapNotNull { it.toWishlistItem() }
+
+        if (responses.isEmpty()) {
+            return@withContext emptyList()
+        }
+
+        val fallbackById = buildFallbackCafes(responses)
+        responses.mapNotNull { response ->
+            val fallbackCafe = fallbackById[response.cafe_id]
+            response.toWishlistItem(fallbackCafe = fallbackCafe)
+        }
     }
 
-    suspend fun addToWishlist(userId: String, cafe: Cafe): WishlistAddResult = withContext(Dispatchers.IO) {
+    suspend fun addToWishlist(
+        userId: String,
+        cafe: Cafe
+    ): WishlistAddResult = withContext(Dispatchers.IO) {
+        val cafeId = cafe.cafe_id
         val existing = client.from("wishlist")
             .select(columns = SELECT_COLUMNS) {
                 filter {
                     eq("user_id", userId)
-                    eq("cafe_id", cafe.cafe_id)
+                    eq("cafe_id", cafeId)
                 }
                 limit(1)
             }
@@ -102,7 +116,7 @@ object WishlistRepository {
             .insert(
                 mapOf(
                     "user_id" to userId,
-                    "cafe_id" to cafe.cafe_id
+                    "cafe_id" to cafeId
                 )
             ) {
                 select(columns = SELECT_COLUMNS)
@@ -146,6 +160,28 @@ object WishlistRepository {
 
     private const val DEFAULT_IMAGE_BUCKET = "cafe-images"
     private val SELECT_COLUMNS = Columns.raw(
-        "wishlist_id, created_at, cafe:cafe_id(*, cafe_tag(tag(*)))"
+        "wishlist_id, cafe_id, created_at, cafe:cafe_id(*, cafe_tag(tag(*)))"
     )
+
+    private suspend fun buildFallbackCafes(
+        responses: List<WishlistResponse>
+    ): Map<String, Cafe> {
+        val missingIds = responses
+            .filter { it.cafe == null }
+            .map { it.cafe_id }
+            .distinct()
+
+        if (missingIds.isEmpty()) {
+            return emptyMap()
+        }
+
+        val fallback = mutableMapOf<String, Cafe>()
+        for (id in missingIds) {
+            val cafe = CafeRepository.getCafeById(id)
+            if (cafe != null) {
+                fallback[id] = cafe
+            }
+        }
+        return fallback
+    }
 }

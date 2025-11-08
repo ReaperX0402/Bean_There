@@ -18,7 +18,6 @@ import com.example.myapplication.data.WishlistRepository
 import com.example.myapplication.model.WishlistItem
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import androidx.core.net.toUri
 
 class Wishlist : Fragment() {
 

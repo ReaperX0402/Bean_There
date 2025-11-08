@@ -109,6 +109,20 @@ object CafeRepository {
             .decodeList<Tag>()
     }
 
+    // --- READ CAFE BY ID ---
+    suspend fun getCafeById(cafeId: String): Cafe? = withContext(Dispatchers.IO) {
+        client.from("cafe")
+            .select(columns = Columns.raw("*, cafe_tag(tag(*))")) {
+                filter {
+                    eq("cafe_id", cafeId)
+                }
+                limit(1)
+            }
+            .decodeList<CafeResponse>()
+            .firstOrNull()
+            ?.toCafe()
+    }
+
     // --- UPDATE CAFE RATING ---
     suspend fun updateCafeRating(cafeId: String, newRating: Double): Cafe =
         withContext(Dispatchers.IO) {

@@ -22,7 +22,6 @@ import com.example.myapplication.data.WishlistRepository
 import com.example.myapplication.model.Cafe
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import androidx.core.net.toUri
 
 class CafeDetail : Fragment() {
 
@@ -128,7 +127,7 @@ class CafeDetail : Fragment() {
                 try {
                     val result = WishlistRepository.addToWishlist(
                         userId = userId,
-                        cafe = cafe,
+                        cafe = cafe
                     )
                     val messageRes = if (result.isNew) {
                         R.string.wishlist_add_success
