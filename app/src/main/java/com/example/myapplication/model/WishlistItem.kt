@@ -2,9 +2,11 @@ package com.example.myapplication.model
 
 import java.io.Serializable
 
-
+/**
+ * Represents a wishlist entry that belongs to a user.
+ */
 data class WishlistItem(
     val id: String,
     val cafe: Cafe,
-    val addedAt: String? = null
+    val createdAt: String? = null
 ) : Serializable
