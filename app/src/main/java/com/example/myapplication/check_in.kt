@@ -21,8 +21,8 @@ import com.example.myapplication.adapter.MultiSelectCategoryAdapter
 import com.example.myapplication.data.CafeRepository
 import com.example.myapplication.data.ReviewRepository
 import com.example.myapplication.data.UserSessionManager
-import com.example.myapplication.model.Cafe
 import com.example.myapplication.databinding.FragmentCheckInBinding
+import com.example.myapplication.model.Cafe
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.File
