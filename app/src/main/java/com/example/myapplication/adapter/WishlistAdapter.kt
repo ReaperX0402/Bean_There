@@ -14,7 +14,8 @@ import com.example.myapplication.model.WishlistItem
 
 class WishlistAdapter(
     private val onOpenLocation: (WishlistItem) -> Unit,
-    private val onRemove: (WishlistItem) -> Unit
+    private val onRemove: (WishlistItem) -> Unit,
+    private val onCheckIn: (WishlistItem) -> Unit
 ) : RecyclerView.Adapter<WishlistAdapter.WishlistViewHolder>() {
 
     private val items: MutableList<WishlistItem> = mutableListOf()
@@ -28,7 +29,7 @@ class WishlistAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishlistViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.wishlist_card, parent, false)
-        return WishlistViewHolder(view, onOpenLocation, onRemove)
+        return WishlistViewHolder(view, onOpenLocation, onRemove, onCheckIn)
     }
 
     override fun onBindViewHolder(holder: WishlistViewHolder, position: Int) {
@@ -40,7 +41,8 @@ class WishlistAdapter(
     class WishlistViewHolder(
         itemView: View,
         private val onOpenLocation: (WishlistItem) -> Unit,
-        private val onRemove: (WishlistItem) -> Unit
+        private val onRemove: (WishlistItem) -> Unit,
+        private val onCheckIn: (WishlistItem) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val cafeImage: ImageView = itemView.findViewById(R.id.cafe_image)
@@ -49,6 +51,7 @@ class WishlistAdapter(
         private val cafeAddress: TextView = itemView.findViewById(R.id.cafe_address)
         private val categoriesRecycler: RecyclerView = itemView.findViewById(R.id.categories_recycle)
         private val locationButton: ImageButton = itemView.findViewById(R.id.location_btn)
+        private val checkInButton: ImageButton = itemView.findViewById(R.id.check_in_btn)
         private val cancelButton: ImageButton = itemView.findViewById(R.id.cancel_btn)
         private val categoryAdapter = CategoryAdapter(R.layout.item_category_button_small)
 
@@ -79,6 +82,7 @@ class WishlistAdapter(
             categoryAdapter.submitList(cafe.tags)
 
             locationButton.setOnClickListener { onOpenLocation(item) }
+            checkInButton.setOnClickListener { onCheckIn(item) }
             cancelButton.setOnClickListener { onRemove(item) }
         }
     }
