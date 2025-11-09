@@ -1,6 +1,9 @@
 package com.example.myapplication.data
 
+import com.example.myapplication.model.ReviewWithCafe
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.storage.storage
 import io.github.jan.supabase.storage.upload
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +15,7 @@ import java.time.Instant
 import java.util.Locale
 import java.util.UUID
 import io.ktor.http.ContentType
+import kotlinx.serialization.SerialName
 
 object ReviewRepository {
 
@@ -42,6 +46,37 @@ object ReviewRepository {
     private data class ReviewTagInsert(
         val review_id: String,
         val tag_id: String
+    )
+
+    @Serializable
+    private data class ReviewWithCafeResponse(
+        val review_id: String,
+        val cafe_id: String,
+        val comment: String? = null,
+        @SerialName("img_url")
+        val imageUrl: String? = null,
+        val rating: Double,
+        val review_date: String,
+        val cafe: CafeSummaryResponse? = null
+    ) {
+        fun toReviewWithCafe(): ReviewWithCafe {
+            val parsedDate = runCatching { Instant.parse(review_date) }.getOrNull()
+            return ReviewWithCafe(
+                reviewId = review_id,
+                cafeId = cafe_id,
+                cafeName = cafe?.name.orEmpty(),
+                comment = comment,
+                rating = rating,
+                reviewImageUrl = imageUrl,
+                reviewDate = parsedDate
+            )
+        }
+    }
+
+    @Serializable
+    private data class CafeSummaryResponse(
+        val cafe_id: String,
+        val name: String
     )
 
     suspend fun createReview(
@@ -107,6 +142,16 @@ object ReviewRepository {
         }
 
         "$PUBLIC_REVIEW_BASE_URL${path.removePrefix(STORAGE_PATH_PREFIX)}"
+    }
+
+    suspend fun getReviewsByUser(userId: String): List<ReviewWithCafe> = withContext(Dispatchers.IO) {
+        client.from(REVIEW_TABLE)
+            .select(columns = Columns.raw("*, cafe:cafe_id(name)")) {
+                filter { eq("user_id", userId) }
+                order(column = "review_date", order = Order.DESCENDING)
+            }
+            .decodeList<ReviewWithCafeResponse>()
+            .map { it.toReviewWithCafe() }
     }
 
 }

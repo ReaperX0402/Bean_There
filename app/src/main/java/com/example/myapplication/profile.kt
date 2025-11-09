@@ -10,6 +10,10 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.adapter.ProfilePostAdapter
+import com.example.myapplication.data.ReviewRepository
 import com.example.myapplication.data.UserRepository
 import com.example.myapplication.data.UserSessionManager
 import com.example.myapplication.model.User
@@ -26,7 +30,9 @@ class Profile : Fragment(R.layout.fragment_profile) {
     private lateinit var profileHeader: View
     private lateinit var headerDivider: View
     private lateinit var postsLabel: View
-    private lateinit var postsRecyclerView: View
+    private lateinit var postsRecyclerView: RecyclerView
+    private lateinit var postsEmptyState: TextView
+    private lateinit var postsAdapter: ProfilePostAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,6 +47,11 @@ class Profile : Fragment(R.layout.fragment_profile) {
         headerDivider = view.findViewById(R.id.header_divider)
         postsLabel = view.findViewById(R.id.posts_label)
         postsRecyclerView = view.findViewById(R.id.posts_recycler_view)
+        postsEmptyState = view.findViewById(R.id.posts_empty_state)
+
+        postsAdapter = ProfilePostAdapter()
+        postsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        postsRecyclerView.adapter = postsAdapter
 
         editButton.setOnClickListener {
             startActivity(Intent(requireContext(), EditProfileActivity::class.java))
@@ -78,21 +89,26 @@ class Profile : Fragment(R.layout.fragment_profile) {
         showLoading(true)
         errorText.isGone = true
 
-        runCatching {
-            UserRepository.getUserById(userId)
-        }.onSuccess { user ->
-            showLoading(false)
-            if (user == null) {
-                showError(getString(R.string.profile_not_found))
-                return@onSuccess
-            }
-            bindUser(user)
-            UserSessionManager.saveUser(context, user)
-        }.onFailure { error ->
+        val userResult = runCatching { UserRepository.getUserById(userId) }
+
+        val user = userResult.getOrElse { error ->
             showLoading(false)
             val message = error.message ?: getString(R.string.error_generic)
             showError(message)
+            return
         }
+
+        if (user == null) {
+            showLoading(false)
+            showError(getString(R.string.profile_not_found))
+            return
+        }
+
+        bindUser(user)
+        UserSessionManager.saveUser(context, user)
+
+        loadUserPosts(user.userId)
+        showLoading(false)
     }
 
     private fun bindUser(user: User) {
@@ -140,5 +156,29 @@ class Profile : Fragment(R.layout.fragment_profile) {
         headerDivider.visibility = visibility
         postsLabel.visibility = visibility
         postsRecyclerView.visibility = visibility
+        postsEmptyState.visibility = visibility
+    }
+
+    private suspend fun loadUserPosts(userId: String) {
+        val context = requireContext()
+        runCatching {
+            ReviewRepository.getReviewsByUser(userId)
+        }.onSuccess { reviews ->
+            postsAdapter.submitList(reviews)
+            if (reviews.isEmpty()) {
+                postsRecyclerView.isGone = true
+                postsEmptyState.isVisible = true
+                postsEmptyState.text = getString(R.string.profile_no_posts)
+            } else {
+                postsRecyclerView.isVisible = true
+                postsEmptyState.isGone = true
+            }
+        }.onFailure { error ->
+            postsAdapter.submitList(emptyList())
+            postsRecyclerView.isGone = true
+            postsEmptyState.isVisible = true
+            postsEmptyState.text = getString(R.string.profile_posts_load_error)
+            Toast.makeText(context, error.message ?: getString(R.string.error_generic), Toast.LENGTH_SHORT).show()
+        }
     }
 }
