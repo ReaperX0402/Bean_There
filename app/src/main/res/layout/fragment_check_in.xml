@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/beige"
-    tools:context=".CheckIn"
-    android:padding="10dp"
-    >
+    android:fillViewport="true"
+    android:padding="16dp"
+    tools:context=".CheckIn">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/check_in_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        >
+        android:paddingBottom="24dp">
 
         <!-- 🏠 Header Section -->
         <TextView
@@ -40,24 +40,32 @@
             android:layout_marginTop="4dp" />
 
         <!-- 📷 Camera Section -->
-        <FrameLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/camera_block"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            android:background="@drawable/dotted_border_box"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
             android:clickable="true"
             android:focusable="true"
             android:clipToOutline="true"
+            app:cardBackgroundColor="@color/light_yellow"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/coffee_brown"
+            app:strokeWidth="1dp"
+            app:layout_constraintDimensionRatio="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cafe_name">
+            app:layout_constraintTop_toBottomOf="@id/cafe_name"
+            app:layout_constraintBottom_toTopOf="@id/review_label">
 
             <ImageView
                 android:id="@+id/camera_preview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:adjustViewBounds="true"
+                android:adjustViewBounds="false"
                 android:contentDescription="@string/review_captured_photo_content_description"
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
@@ -80,12 +88,13 @@
                     android:id="@+id/camera_tagline_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:gravity="center"
                     android:text="@string/camera_tagline"
                     android:textColor="@color/coffee_brown"
                     android:textSize="12sp" />
             </LinearLayout>
-        </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- 💬 Review Text -->
         <TextView
@@ -159,19 +168,20 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <!-- 🧾 Submit Button -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/post_btn"
-            android:layout_width="300dp"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/post_now"
-            android:backgroundTint="@color/coffee_brown"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
+            app:backgroundTint="@color/coffee_brown"
             app:layout_constraintTop_toBottomOf="@id/rating_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="10dp"
-            />
+            app:layout_constraintHorizontal_bias="0.5" />
 
         <ProgressBar
             android:id="@+id/post_progress"
@@ -179,7 +189,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="16dp"
             android:indeterminate="true"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/post_btn"
