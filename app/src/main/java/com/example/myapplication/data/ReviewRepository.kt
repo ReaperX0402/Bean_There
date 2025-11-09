@@ -75,18 +75,36 @@ object ReviewRepository {
     }
 
     suspend fun uploadReviewImage(file: File): String = withContext(Dispatchers.IO) {
-        val ext = file.extension.ifBlank { "jpg" }.lowercase(Locale.ROOT)
-        val path = "reviews/${UUID.randomUUID()}.$ext"
-        val type = URLConnection.guessContentTypeFromName(file.name) ?: "image/$ext"
+        require(file.exists()) { "File does not exist: ${file.absolutePath}" }
 
-        val bucket = client.storage.from("photos")
+        val detectedMime = URLConnection.guessContentTypeFromName(file.name)
+            ?: file.inputStream().use { stream ->
+                URLConnection.guessContentTypeFromStream(stream)
+            }
+
+        val rawExt = file.extension.takeIf { it.isNotBlank() }
+            ?: detectedMime?.substringAfter('/')
+            ?: "jpg"
+        val normalizedExt = rawExt.lowercase(Locale.ROOT).let { ext ->
+            if (ext == "jpeg") "jpg" else ext
+        }
+
+        val resolvedContentType = when {
+            detectedMime.isNullOrBlank() && normalizedExt == "jpg" -> "image/jpeg"
+            detectedMime.equals("image/jpg", ignoreCase = true) -> "image/jpeg"
+            !detectedMime.isNullOrBlank() -> detectedMime
+            else -> "image/$normalizedExt"
+        }
+
+        val path = "$STORAGE_PATH_PREFIX${UUID.randomUUID()}.$normalizedExt"
+        val bucket = client.storage.from(STORAGE_BUCKET)
 
         bucket.upload(path, file) {
             upsert = false
-            contentType = type
+            contentType = resolvedContentType
         }
 
-        bucket.publicUrl(path)
+        "$PUBLIC_REVIEW_BASE_URL${path.removePrefix(STORAGE_PATH_PREFIX)}"
     }
 
 }
