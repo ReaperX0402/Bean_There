@@ -107,6 +107,12 @@
     <string name="profile_member_since_placeholder">Member since —</string>
     <string name="profile_not_found">We could not find your profile.</string>
     <string name="profile_requires_login">Log in to view your profile information.</string>
+    <string name="profile_no_posts">You haven&#39;t shared any reviews yet.</string>
+    <string name="profile_posts_load_error">We couldn&#39;t load your posts right now.</string>
+    <string name="profile_review_rating_format">Rating: %.1f/5.0</string>
+    <string name="profile_review_date_format">Posted on %1$s</string>
+    <string name="profile_review_date_unknown">Posted on —</string>
+    <string name="profile_review_image_content_description">Photo from your review of %1$s</string>
     <string name="edit_profile_title">Edit Profile</string>
     <string name="edit_profile_subtitle">Update your account details below.</string>
     <string name="edit_profile_action">Save Changes</string>
