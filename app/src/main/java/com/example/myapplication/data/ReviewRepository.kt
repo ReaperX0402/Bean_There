@@ -2,6 +2,7 @@ package com.example.myapplication.data
 
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.storage.storage
+import io.github.jan.supabase.storage.upload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -10,6 +11,7 @@ import java.net.URLConnection
 import java.time.Instant
 import java.util.Locale
 import java.util.UUID
+import io.ktor.http.ContentType
 
 object ReviewRepository {
 
@@ -26,7 +28,7 @@ object ReviewRepository {
         val user_id: String,
         val cafe_id: String,
         val comment: String? = null,
-        val image_url: String? = null,
+        val img_url: String? = null,
         val rating: Double,
         val review_date: String
     )
@@ -53,7 +55,7 @@ object ReviewRepository {
             user_id = userId,
             cafe_id = cafeId,
             comment = comment,
-            image_url = imageUrl,
+            img_url = imageUrl,
             rating = rating,
             review_date = Instant.now().toString()
         )
@@ -101,7 +103,7 @@ object ReviewRepository {
 
         bucket.upload(path, file) {
             upsert = false
-            contentType = resolvedContentType
+            contentType = ContentType.parse(resolvedContentType)
         }
 
         "$PUBLIC_REVIEW_BASE_URL${path.removePrefix(STORAGE_PATH_PREFIX)}"

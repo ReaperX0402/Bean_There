@@ -8,5 +8,5 @@ import java.io.Serializable
 data class WishlistItem(
     val id: String,
     val cafe: Cafe,
-    val createdAt: String? = null
+    val addedAt: String? = null
 ) : Serializable
