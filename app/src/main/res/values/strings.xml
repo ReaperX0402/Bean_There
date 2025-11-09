@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Bean There</string>
     <string name="home_header_text">BREWED JUST FOR YOU</string>
@@ -44,7 +45,7 @@
     <string name="post_now">POST NOW</string>
     <string name="rating">How would you rate this café?</string>
     <string name="category_tag_selection">Choose up to 2 suitable tags:</string>
-    <string name="review">Write your thoughts...</string>
+    <string name="review">Write your thoughts…</string>
     <string name="review_header">What\'s brewing in your mind? Share your coffee vibes!</string>
     <string name="camera_tagline">Capture the perfect moment\nYour coffee, your vibes, your story</string>
     <string name="currently_at">Currently at</string>
@@ -72,10 +73,10 @@
     <string name="review_unknown_cafe">Select a café to get started</string>
     <string name="review_category_limit_warning">You can only choose up to 2 tags.</string>
     <string name="review_camera_permission_denied">Camera permission is required to take a photo.</string>
-    <string name="review_capture_failed">We couldn&#39;t capture that photo. Please try again.</string>
-    <string name="review_upload_error">We couldn&#39;t upload your photo. Please try again.</string>
+    <string name="review_capture_failed">We could not capture that photo. Please try again.</string>
+    <string name="review_upload_error">We could not upload your photo. Please try again.</string>
     <string name="review_submit_success">Thanks for sharing your review!</string>
-    <string name="review_submit_error">We couldn&#39;t post your review. Please try again.</string>
+    <string name="review_submit_error">We could not post your review. Please try again.</string>
     <string name="review_login_required">Log in to share a review.</string>
     <string name="review_select_cafe_first">Select a café before posting your review.</string>
     <string name="review_rating_required">Please rate the café before posting.</string>
