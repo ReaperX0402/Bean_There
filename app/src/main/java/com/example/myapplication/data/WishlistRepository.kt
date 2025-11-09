@@ -60,7 +60,7 @@ object WishlistRepository {
     private data class WishlistResponse(
         val wishlist_id: String,
         val cafe_id: String,
-        val created_at: String? = null,
+        val added_at: String? = null,
         val cafe: WishlistCafeResponse? = null
     ) {
         fun toWishlistItem(fallbackCafe: Cafe? = null): WishlistItem? {
@@ -68,7 +68,7 @@ object WishlistRepository {
             return WishlistItem(
                 id = wishlist_id,
                 cafe = cafe,
-                createdAt = created_at
+                addedAt = added_at
             )
         }
     }
@@ -77,7 +77,7 @@ object WishlistRepository {
         val responses = client.from("wishlist")
             .select(columns = SELECT_COLUMNS) {
                 filter { eq("user_id", userId) }
-                order(column = "created_at", order = Order.DESCENDING)
+                order(column = "added_at", order = Order.DESCENDING)
             }
             .decodeList<WishlistResponse>()
 
@@ -160,7 +160,7 @@ object WishlistRepository {
 
     private const val DEFAULT_IMAGE_BUCKET = "cafe-images"
     private val SELECT_COLUMNS = Columns.raw(
-        "wishlist_id, cafe_id, created_at, cafe:cafe_id(*, cafe_tag(tag(*)))"
+        "wishlist_id, cafe_id, added_at, cafe:cafe_id(*, cafe_tag(tag(*)))"
     )
 
     private suspend fun buildFallbackCafes(
