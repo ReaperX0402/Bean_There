@@ -75,22 +75,18 @@ object ReviewRepository {
     }
 
     suspend fun uploadReviewImage(file: File): String = withContext(Dispatchers.IO) {
-        val extension = file.extension.ifBlank { "jpg" }.lowercase(Locale.ROOT)
-        val fileName = "review_${System.currentTimeMillis()}_${UUID.randomUUID()}.$extension"
-        val remotePath = STORAGE_PATH_PREFIX + fileName
-        val contentType = URLConnection.guessContentTypeFromName(file.name)
-            ?: "image/$extension"
-        val bytes = file.readBytes()
+        val ext = file.extension.ifBlank { "jpg" }.lowercase(Locale.ROOT)
+        val path = "reviews/${UUID.randomUUID()}.$ext"
+        val type = URLConnection.guessContentTypeFromName(file.name) ?: "image/$ext"
 
-        client.storage
-            .from(STORAGE_BUCKET)
-            .upload(
-                path = remotePath,
-                data = bytes,
-                upsert = false,
-                contentType = contentType,
-            )
+        val bucket = client.storage.from("photos")
 
-        PUBLIC_REVIEW_BASE_URL + fileName
+        bucket.upload(path, file) {
+            upsert = false
+            contentType = type
+        }
+
+        bucket.publicUrl(path)
     }
+
 }
