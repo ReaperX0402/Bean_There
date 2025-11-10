@@ -1,84 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Challenge"
     android:background="@color/beige"
+    android:fillViewport="true"
     android:padding="10dp"
-    >
-
-    <TextView
-        android:id="@+id/header_text"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:fontFamily="@font/poppins_bold"
-        android:gravity="center"
-        android:text="@string/challenges"
-        android:textColor="@color/black"
-        android:textSize="50sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    tools:context=".Challenge">
 
     <LinearLayout
-        android:id="@+id/points_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header_text"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/points"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            />
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
 
         <TextView
-            android:id="@+id/points"
-            android:layout_width="wrap_content"
+            android:id="@+id/header_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
-            android:text="@string/_1000"
+            android:gravity="center"
+            android:text="@string/challenges"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_marginStart="10dp"
-            />
-        <ImageView
+            android:textSize="48sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+
+        <LinearLayout
+            android:id="@+id/points_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/points"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:text="1,200" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/points"
+                android:src="@drawable/coffee_points" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/reward_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/coffee_points"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            />
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="@string/rewards"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rewards_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            tools:listitem="@layout/item_reward_card" />
+
+        <TextView
+            android:id="@+id/rewards_empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:fontFamily="@font/nunito"
+            android:text="@string/challenge_rewards_empty"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/voucher_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="@string/your_vouchers"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/vouchers_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            tools:listitem="@layout/item_voucher_card" />
+
+        <TextView
+            android:id="@+id/vouchers_empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:fontFamily="@font/nunito"
+            android:text="@string/challenge_vouchers_empty"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/reward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:text="@string/rewards"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/points_layout"
-        android:layout_marginTop="10dp"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reward"
-        android:layout_marginTop="10dp"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

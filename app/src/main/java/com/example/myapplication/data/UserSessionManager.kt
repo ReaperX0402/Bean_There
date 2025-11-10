@@ -10,6 +10,7 @@ object UserSessionManager {
     private const val KEY_USER_ID = "user_id"
     private const val KEY_USERNAME = "username"
     private const val KEY_EMAIL = "email"
+    private const val KEY_POINTS = "points"
 
     fun saveUser(context: Context, user: User) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -17,12 +18,18 @@ object UserSessionManager {
             putString(KEY_USER_ID, user.userId)
                 .putString(KEY_USERNAME, user.username)
                 .putString(KEY_EMAIL, user.email)
+                .putInt(KEY_POINTS, user.points)
         }
     }
 
     fun getUserId(context: Context): String? {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return prefs.getString(KEY_USER_ID, null)
+    }
+
+    fun getPoints(context: Context): Int {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getInt(KEY_POINTS, 0)
     }
 
     fun getUsername(context: Context): String? {
