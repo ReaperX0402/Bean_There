@@ -1,5 +1,6 @@
 package com.example.myapplication.data
 
+import android.util.Log
 import com.example.myapplication.model.ReviewWithCafe
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -146,12 +147,15 @@ object ReviewRepository {
 
     suspend fun getReviewsByUser(userId: String): List<ReviewWithCafe> = withContext(Dispatchers.IO) {
         client.from(REVIEW_TABLE)
-            .select(columns = Columns.raw("*, cafe:cafe_id(name)")) {
-                filter { eq("user_id", userId) }
-                order(column = "review_date", order = Order.DESCENDING)
-            }
-            .decodeList<ReviewWithCafeResponse>()
-            .map { it.toReviewWithCafe() }
+            .select(columns = Columns.raw(
+                "review_id,user_id,cafe_id,comment,img_url,rating,review_date," +
+                        "cafe(cafe_id,name)"
+                )) {
+                    filter { eq("user_id", userId) }
+                    order(column = "review_date", order = Order.DESCENDING)
+                }
+                .decodeList<ReviewWithCafeResponse>()
+                .map { it.toReviewWithCafe() }
     }
 
 }
