@@ -19,6 +19,7 @@ object UserRepository {
         val username: String,
         val email: String? = null,
         val password: String,
+        val points: Int = 0,
         @SerialName("profile_picture_url")
         val profilePictureUrl: String? = null,
         val created_at: String? = null
@@ -27,6 +28,7 @@ object UserRepository {
             userId = user_id,
             username = username,
             email = email,
+            points = points,
             password = password,
             profilePictureUrl = profilePictureUrl,
             createdAt = created_at
