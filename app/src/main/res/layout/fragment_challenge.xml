@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
-            android:text="@string/challenges"
+            android:text="@string/rewards"
             android:textColor="@color/black"
             android:textSize="48sp"
             android:paddingTop="8dp"
@@ -62,17 +62,6 @@
                 android:contentDescription="@string/points"
                 android:src="@drawable/coffee_points" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/reward_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/rewards"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rewards_recycler"

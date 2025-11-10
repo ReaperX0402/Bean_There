@@ -215,7 +215,7 @@
                     app:layout_columnWeight="1"
                     app:layout_rowWeight="1"
                     android:paddingTop="10dp"
-                    android:text="@string/challenges"
+                    android:text="@string/rewards"
                     android:fontFamily="@font/nunito_bold"
                     android:textSize="11.5sp"
                     android:textColor="@color/beige"
