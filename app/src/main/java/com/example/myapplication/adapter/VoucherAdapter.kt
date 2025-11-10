@@ -44,7 +44,8 @@ class VoucherAdapter(
                 voucher.status.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
             )
             obtainedText.text = voucher.obtainedAt?.let {
-                context.getString(R.string.challenge_voucher_obtained, it)
+                val displayDate = it.substringBefore('T', it)
+                context.getString(R.string.challenge_voucher_obtained, displayDate)
             } ?: context.getString(R.string.challenge_voucher_obtained_unknown)
 
             val canUse = RewardRepository.isVoucherRedeemed(voucher)
