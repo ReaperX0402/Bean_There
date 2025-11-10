@@ -4,5 +4,6 @@ data class UserVoucher(
     val id: String,
     val reward: Reward,
     val status: String,
-    val obtainedAt: String?
+    val obtainedAt: String?,
+    val code: String?
 )

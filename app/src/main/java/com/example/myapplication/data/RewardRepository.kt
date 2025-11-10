@@ -4,9 +4,9 @@ import com.example.myapplication.model.Reward
 import com.example.myapplication.model.UserVoucher
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
-import io.github.jan.supabase.postgrest.query.filter.eq
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 object RewardRepository {
@@ -19,63 +19,68 @@ object RewardRepository {
     )
 
     private val client get() = SupabaseProvider.client
-
-    private const val STATUS_REDEEMED = "redeemed"
-    private const val STATUS_USED = "used"
+    private const val STATUS_CLAIMED = "claimed"
+    private const val STATUS_USED = "redeemed"
 
     @Serializable
     private data class RewardResponse(
-        val reward_id: String,
-        val reward_name: String,
-        val description: String? = null,
-        val points_required: Int,
-        val image_url: String? = null,
-        val status: String? = null
+        @SerialName("reward_id") val id: String,
+        @SerialName("name") val name: String,
+        @SerialName("description") val description: String? = null,
+        @SerialName("point_cost") val pointCost: Int,
+        @SerialName("inventory") val inventory: Int? = null,
+        @SerialName("active") val active: Boolean
     ) {
         fun toReward(): Reward = Reward(
-            id = reward_id,
-            name = reward_name,
+            id = id,
+            name = name,
             description = description,
-            pointsRequired = points_required,
-            imageUrl = image_url,
-            status = status
+            pointsRequired = pointCost,
+            imageUrl = null,
+            status = if (active) "active" else "inactive"
         )
     }
 
     @Serializable
     private data class UserRewardResponse(
-        val user_reward_id: String,
-        val reward_id: String,
-        val status: String,
-        val obtained_at: String? = null,
-        val reward: RewardResponse? = null
+        @SerialName("user_reward_id") val userRewardId: String,
+        @SerialName("reward_id") val rewardId: String,
+        @SerialName("status") val status: String,
+        @SerialName("claimed_at") val claimedAt: String,
+        @SerialName("code") val code: String? = null,
+        @SerialName("reward") val reward: RewardResponse? = null
     ) {
         fun toUserVoucher(fallbackReward: Reward? = null): UserVoucher? {
             val rewardModel = reward?.toReward() ?: fallbackReward ?: return null
             return UserVoucher(
-                id = user_reward_id,
+                id = userRewardId,
                 reward = rewardModel,
                 status = status,
-                obtainedAt = obtained_at
+                obtainedAt = claimedAt,
+                code = code
             )
         }
     }
 
     @Serializable
     private data class UserPointsResponse(
-        val points: Int = 0
+        @SerialName("total_point") val points: Int = 0
     )
 
     suspend fun getRewards(): List<Reward> = withContext(Dispatchers.IO) {
         client.from("reward")
-            .select(columns = Columns.ALL)
+            .select(
+                Columns.list("reward_id", "name", "description", "point_cost", "inventory", "active")
+            ) {
+                filter { eq("active", true) }
+            }
             .decodeList<RewardResponse>()
             .map { it.toReward() }
     }
 
     suspend fun getUserPoints(userId: String): Int = withContext(Dispatchers.IO) {
         client.from("user")
-            .select(columns = Columns.list("points")) {
+            .select(columns = Columns.list("total_point")) {
                 filter { eq("user_id", userId) }
                 limit(1)
             }
@@ -94,36 +99,34 @@ object RewardRepository {
 
     suspend fun redeemReward(userId: String, reward: Reward): RedemptionResult = withContext(Dispatchers.IO) {
         val currentPoints = getUserPoints(userId)
-        if (currentPoints < reward.pointsRequired) {
-            throw InsufficientPointsException()
-        }
+        if (currentPoints < reward.pointsRequired) throw InsufficientPointsException()
 
-        val updatedPoints = client.from("user")
-            .update({
-                set("points", currentPoints - reward.pointsRequired)
-            }) {
+        // 1) Deduct points
+        val newPoints = currentPoints - reward.pointsRequired
+        val updated = client.from("user")
+            .update({ set("total_point", newPoints) }) {
                 filter { eq("user_id", userId) }
-                select(columns = Columns.list("points"))
+                select(columns = Columns.list("total_point"))
                 limit(1)
             }
-            .decodeList<UserPointsResponse>()
-            .firstOrNull()?.points ?: (currentPoints - reward.pointsRequired)
-
+            .decodeSingle<UserPointsResponse>()
+            .points
         val voucher = client.from("user_reward")
             .insert(
                 mapOf(
                     "user_id" to userId,
                     "reward_id" to reward.id,
-                    "status" to STATUS_REDEEMED
+                    "status" to STATUS_CLAIMED
+                    // claimed_at can be defaulted in DB with now()
                 )
             ) {
                 select(columns = USER_REWARD_COLUMNS)
             }
-            .decodeList<UserRewardResponse>()
-            .firstOrNull()?.toUserVoucher(fallbackReward = reward)
+            .decodeSingle<UserRewardResponse>()
+            .toUserVoucher(fallbackReward = reward)
             ?: throw IllegalStateException("Failed to create user voucher")
 
-        RedemptionResult(voucher, updatedPoints)
+        RedemptionResult(voucher, updated)
     }
 
     suspend fun useVoucher(userRewardId: String): UserVoucher = withContext(Dispatchers.IO) {
@@ -135,16 +138,16 @@ object RewardRepository {
                 select(columns = USER_REWARD_COLUMNS)
                 limit(1)
             }
-            .decodeList<UserRewardResponse>()
-            .firstOrNull()?.toUserVoucher()
+            .decodeSingle<UserRewardResponse>()
+            .toUserVoucher()
             ?: throw IllegalStateException("Voucher not found")
     }
 
     private val USER_REWARD_COLUMNS = Columns.raw(
-        "user_reward_id, reward_id, status, obtained_at, reward:reward_id(*)"
+        // join the reward so UI has full details
+        "user_reward_id, reward_id, status, claimed_at, code, reward:reward_id(*)"
     )
 
-    fun isVoucherRedeemed(voucher: UserVoucher): Boolean {
-        return voucher.status.equals(STATUS_REDEEMED, ignoreCase = true)
-    }
+    fun isVoucherRedeemed(voucher: UserVoucher): Boolean =
+        voucher.status.equals(STATUS_CLAIMED, ignoreCase = true)
 }

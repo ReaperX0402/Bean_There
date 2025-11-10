@@ -43,7 +43,6 @@ class RewardAdapter(
         private val onUse: (RewardListItem) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
-        private val imageView: ImageView = itemView.findViewById(R.id.reward_image)
         private val nameText: TextView = itemView.findViewById(R.id.reward_name)
         private val descriptionText: TextView = itemView.findViewById(R.id.reward_description)
         private val pointsText: TextView = itemView.findViewById(R.id.reward_points_required)
@@ -71,13 +70,6 @@ class RewardAdapter(
                 item.availableVouchers
             )
             voucherInfoText.text = voucherInfo
-
-            imageView.contentDescription = reward.name
-            imageView.load(reward.imageUrl) {
-                crossfade(true)
-                placeholder(R.drawable.contact2)
-                error(R.drawable.contact2)
-            }
 
             redeemButton.isEnabled = item.canRedeem
             redeemButton.setOnClickListener { onRedeem(reward) }
