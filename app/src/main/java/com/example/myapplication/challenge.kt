@@ -82,12 +82,14 @@ class Challenge : Fragment(R.layout.fragment_challenge) {
             try {
                 val points = RewardRepository.getUserPoints(userId)
                 currentPoints = points
+                UserSessionManager.updatePoints(context, points)
                 updatePointsText()
 
                 val rewards = RewardRepository.getRewards()
                     .sortedBy { it.pointsRequired }
                 val vouchers = RewardRepository.getUserVouchers(userId)
                     .sortedByDescending { it.obtainedAt }
+                val availableVouchers = vouchers.filter { RewardRepository.isVoucherAvailable(it) }
 
                 val rewardItems = buildRewardItems(rewards, vouchers, points)
                 rewardAdapter.submitList(rewardItems)
@@ -98,9 +100,9 @@ class Challenge : Fragment(R.layout.fragment_challenge) {
                     ""
                 }
 
-                voucherAdapter.submitList(vouchers)
-                vouchersEmptyState.visibility = if (vouchers.isEmpty()) View.VISIBLE else View.GONE
-                vouchersEmptyState.text = if (vouchers.isEmpty()) {
+                voucherAdapter.submitList(availableVouchers)
+                vouchersEmptyState.visibility = if (availableVouchers.isEmpty()) View.VISIBLE else View.GONE
+                vouchersEmptyState.text = if (availableVouchers.isEmpty()) {
                     getString(R.string.challenge_vouchers_empty)
                 } else {
                     ""
@@ -120,7 +122,7 @@ class Challenge : Fragment(R.layout.fragment_challenge) {
         val vouchersByReward = vouchers.groupBy { it.reward.id }
         return rewards.map { reward ->
             val rewardVouchers = vouchersByReward[reward.id].orEmpty()
-            val redeemableVouchers = rewardVouchers.filter { RewardRepository.isVoucherRedeemed(it) }
+            val redeemableVouchers = rewardVouchers.filter { RewardRepository.isVoucherAvailable(it) }
             val isActive = reward.status.isNullOrBlank() || reward.status.equals("active", ignoreCase = true)
             RewardListItem(
                 reward = reward,
@@ -136,7 +138,10 @@ class Challenge : Fragment(R.layout.fragment_challenge) {
         val userId = requireLoggedInUserId() ?: return
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                RewardRepository.redeemReward(userId, reward)
+                val result = RewardRepository.redeemReward(userId, reward)
+                currentPoints = result.remainingPoints
+                UserSessionManager.updatePoints(requireContext(), currentPoints)
+                updatePointsText()
                 Toast.makeText(requireContext(), R.string.challenge_redeem_success, Toast.LENGTH_SHORT).show()
                 loadChallengeData()
             } catch (error: RewardRepository.InsufficientPointsException) {
@@ -161,7 +166,7 @@ class Challenge : Fragment(R.layout.fragment_challenge) {
     }
 
     private fun onUseVoucher(voucher: UserVoucher) {
-        if (!RewardRepository.isVoucherRedeemed(voucher)) {
+        if (!RewardRepository.isVoucherAvailable(voucher)) {
             Toast.makeText(requireContext(), R.string.challenge_use_unavailable, Toast.LENGTH_SHORT).show()
             return
         }

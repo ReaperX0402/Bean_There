@@ -19,8 +19,8 @@ object RewardRepository {
     )
 
     private val client get() = SupabaseProvider.client
-    private const val STATUS_CLAIMED = "claimed"
-    private const val STATUS_USED = "redeemed"
+    private const val STATUS_AVAILABLE = "claimed"
+    private const val STATUS_REDEEMED = "redeemed"
 
     @Serializable
     private data class RewardResponse(
@@ -116,7 +116,7 @@ object RewardRepository {
                 mapOf(
                     "user_id" to userId,
                     "reward_id" to reward.id,
-                    "status" to STATUS_CLAIMED
+                    "status" to STATUS_AVAILABLE
                     // claimed_at can be defaulted in DB with now()
                 )
             ) {
@@ -130,9 +130,9 @@ object RewardRepository {
     }
 
     suspend fun useVoucher(userRewardId: String): UserVoucher = withContext(Dispatchers.IO) {
-        client.from("user_reward")
+        val updatedVoucher = client.from("user_reward")
             .update({
-                set("status", STATUS_USED)
+                set("status", STATUS_REDEEMED)
             }) {
                 filter { eq("user_reward_id", userRewardId) }
                 select(columns = USER_REWARD_COLUMNS)
@@ -141,6 +141,8 @@ object RewardRepository {
             .decodeSingle<UserRewardResponse>()
             .toUserVoucher()
             ?: throw IllegalStateException("Voucher not found")
+
+        updatedVoucher
     }
 
     private val USER_REWARD_COLUMNS = Columns.raw(
@@ -148,6 +150,6 @@ object RewardRepository {
         "user_reward_id, reward_id, status, claimed_at, code, reward:reward_id(*)"
     )
 
-    fun isVoucherRedeemed(voucher: UserVoucher): Boolean =
-        voucher.status.equals(STATUS_CLAIMED, ignoreCase = true)
+    fun isVoucherAvailable(voucher: UserVoucher): Boolean =
+        voucher.status.equals(STATUS_AVAILABLE, ignoreCase = true)
 }
