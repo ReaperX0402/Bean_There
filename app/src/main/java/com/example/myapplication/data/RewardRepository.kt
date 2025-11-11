@@ -2,6 +2,7 @@ package com.example.myapplication.data
 
 import com.example.myapplication.model.Reward
 import com.example.myapplication.model.UserVoucher
+import io.github.jan.supabase.postgrest.delete
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.Dispatchers
@@ -149,6 +150,13 @@ object RewardRepository {
         // join the reward so UI has full details
         "user_reward_id, reward_id, status, claimed_at, code, reward:reward_id(*)"
     )
+
+    suspend fun deleteVoucher(userRewardId: String) = withContext(Dispatchers.IO) {
+        client.from("user_reward")
+            .delete {
+                filter { eq("user_reward_id", userRewardId) }
+            }
+    }
 
     fun isVoucherAvailable(voucher: UserVoucher): Boolean =
         voucher.status.equals(STATUS_AVAILABLE, ignoreCase = true)
