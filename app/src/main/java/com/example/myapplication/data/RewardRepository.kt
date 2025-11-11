@@ -143,10 +143,6 @@ object RewardRepository {
             .toUserVoucher()
             ?: throw IllegalStateException("Voucher not found")
 
-        if (updatedVoucher.status.equals(STATUS_REDEEMED, ignoreCase = true)) {
-            deleteVoucher(userRewardId)
-        }
-
         updatedVoucher
     }
 

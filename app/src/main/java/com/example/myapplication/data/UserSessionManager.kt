@@ -42,6 +42,11 @@ object UserSessionManager {
         return prefs.getString(KEY_EMAIL, null)
     }
 
+    fun updatePoints(context: Context, points: Int) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit { putInt(KEY_POINTS, points) }
+    }
+
     fun clear(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit().clear().apply()
