@@ -48,7 +48,7 @@ class VoucherAdapter(
                 context.getString(R.string.challenge_voucher_obtained, displayDate)
             } ?: context.getString(R.string.challenge_voucher_obtained_unknown)
 
-            val canUse = RewardRepository.isVoucherRedeemed(voucher)
+            val canUse = RewardRepository.isVoucherAvailable(voucher)
             useButton.isEnabled = canUse
             useButton.setOnClickListener { onUse(voucher) }
         }

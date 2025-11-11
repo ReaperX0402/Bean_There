@@ -120,7 +120,7 @@ class Challenge : Fragment(R.layout.fragment_challenge) {
         val vouchersByReward = vouchers.groupBy { it.reward.id }
         return rewards.map { reward ->
             val rewardVouchers = vouchersByReward[reward.id].orEmpty()
-            val redeemableVouchers = rewardVouchers.filter { RewardRepository.isVoucherRedeemed(it) }
+            val redeemableVouchers = rewardVouchers.filter { RewardRepository.isVoucherAvailable(it) }
             val isActive = reward.status.isNullOrBlank() || reward.status.equals("active", ignoreCase = true)
             RewardListItem(
                 reward = reward,
@@ -161,7 +161,7 @@ class Challenge : Fragment(R.layout.fragment_challenge) {
     }
 
     private fun onUseVoucher(voucher: UserVoucher) {
-        if (!RewardRepository.isVoucherRedeemed(voucher)) {
+        if (!RewardRepository.isVoucherAvailable(voucher)) {
             Toast.makeText(requireContext(), R.string.challenge_use_unavailable, Toast.LENGTH_SHORT).show()
             return
         }
