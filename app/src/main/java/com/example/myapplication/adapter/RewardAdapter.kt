@@ -48,7 +48,6 @@ class RewardAdapter(
         private val pointsText: TextView = itemView.findViewById(R.id.reward_points_required)
         private val voucherInfoText: TextView = itemView.findViewById(R.id.reward_voucher_info)
         private val redeemButton: MaterialButton = itemView.findViewById(R.id.reward_redeem_button)
-        private val useButton: MaterialButton = itemView.findViewById(R.id.reward_use_button)
         private val numberFormatter = NumberFormat.getIntegerInstance()
 
         fun bind(item: RewardListItem) {
@@ -74,8 +73,6 @@ class RewardAdapter(
             redeemButton.isEnabled = item.canRedeem
             redeemButton.setOnClickListener { onRedeem(reward) }
 
-            useButton.isEnabled = item.canUse && !item.nextVoucherId.isNullOrBlank()
-            useButton.setOnClickListener { onUse(item) }
         }
     }
 
