@@ -44,7 +44,6 @@ class OrderFragment : Fragment() {
     private lateinit var cartCard: MaterialCardView
     private lateinit var cartTitle: TextView
     private lateinit var cartTotal: TextView
-    private lateinit var cartButton: MaterialButton
     private lateinit var cartFab: ExtendedFloatingActionButton
     private lateinit var cartAdapter: CartItemAdapter
 
@@ -84,13 +83,12 @@ class OrderFragment : Fragment() {
         cartCard = view.findViewById(R.id.cart_summary_card)
         cartTitle = view.findViewById(R.id.cart_summary_title)
         cartTotal = view.findViewById(R.id.cart_summary_total)
-        cartButton = view.findViewById(R.id.cart_summary_button)
         cartFab = view.findViewById(R.id.cart_fab)
 
         orderRecycler.layoutManager = LinearLayoutManager(requireContext())
         orderRecycler.itemAnimator = null
 
-        cartButton.setOnClickListener { showCartBottomSheet() }
+        cartCard.setOnClickListener { showCartBottomSheet() }
         cartFab.setOnClickListener { showCartBottomSheet() }
         backButton.setOnClickListener { navigateUpOneLevel() }
 
@@ -197,6 +195,7 @@ class OrderFragment : Fragment() {
         val state = CartManager.getCartState(requireContext())
         val hasItems = state.items.isNotEmpty()
         cartCard.isVisible = hasItems
+        cartCard.isEnabled = hasItems
         cartFab.isVisible = hasItems
         if (!hasItems) {
             return
