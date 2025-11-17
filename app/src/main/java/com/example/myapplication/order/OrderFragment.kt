@@ -39,6 +39,7 @@ class OrderFragment : Fragment() {
     private lateinit var cartTitle: TextView
     private lateinit var cartTotal: TextView
     private lateinit var cartButton: MaterialButton
+    private lateinit var cartAdapter: CartItemAdapter
 
     private val menuSectionAdapter = MenuSectionAdapter { section, item ->
         addItemToCart(section, item)
