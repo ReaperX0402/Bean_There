@@ -26,10 +26,9 @@ object OrderRepository {
         val name: String,
         val description: String? = null,
         @SerialName("is_active") val isActive: Boolean = true,
-        val cafe: Cafe? = null,
-        @SerialName("item") val items: List<MenuItem> = emptyList()
+        val cafe: Cafe? = null
     ) {
-        fun toSection(): MenuSection {
+        fun toSection(items: List<MenuItem>): MenuSection {
             val menu = Menu(
                 menuId = menuId,
                 cafeId = cafeId,
@@ -52,13 +51,25 @@ object OrderRepository {
     )
 
     suspend fun getMenuHierarchy(): List<CafeMenuGroup> = withContext(Dispatchers.IO) {
-        val sections = client.from("menu")
-            .select(columns = Columns.raw("*, cafe(*), item(*)")) {
+        val menuResponses = client.from("menu")
+            .select(columns = Columns.raw("*, cafe(*)")) {
                 order(column = "name", order = Order.ASCENDING)
             }
             .decodeList<MenuResponse>()
-            .map { it.toSection() }
-            .filter { it.menu.isActive }
+            .filter { it.isActive }
+
+        if (menuResponses.isEmpty()) {
+            return@withContext emptyList<CafeMenuGroup>()
+        }
+
+        val menuIds = menuResponses.map { it.menuId }.toSet()
+        val itemsByMenu = fetchMenuItems(menuIds)
+
+        val sections = menuResponses
+            .map { response ->
+                val sectionItems = itemsByMenu[response.menuId].orEmpty()
+                response.toSection(sectionItems)
+            }
 
         sections
             .groupBy { section -> section.cafeId to section.cafeName }
@@ -76,6 +87,19 @@ object OrderRepository {
             }
             .sortedBy { it.cafeName }
     }
+
+    private suspend fun fetchMenuItems(menuIds: Set<String>): Map<String, List<MenuItem>> =
+        withContext(Dispatchers.IO) {
+            if (menuIds.isEmpty()) return@withContext emptyMap()
+
+            client.from("item")
+                .select(columns = Columns.ALL) {
+                    order(column = "item_name", order = Order.ASCENDING)
+                }
+                .decodeList<MenuItem>()
+                .filter { it.menuId in menuIds }
+                .groupBy { it.menuId }
+        }
 
     suspend fun placeOrder(request: OrderRequest): String = withContext(Dispatchers.IO) {
         val orderPayload = buildMap {
