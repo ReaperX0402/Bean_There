@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="@color/beige">
 
-    <TextView
-        android:id="@+id/order_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/order_title"
-        android:textSize="28sp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/poppins_semibold" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/order_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_title"
+            android:textSize="28sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_semibold" />
 
     <TextView
         android:id="@+id/order_subtitle"
@@ -22,6 +26,28 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/order_subtitle"
+        android:textColor="@color/black"
+        android:fontFamily="@font/nunito_bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/order_back_button"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/order_back_to_cafes"
+        android:textAllCaps="false"
+        android:textColor="@color/matcha"
+        android:visibility="gone"
+        app:strokeColor="@color/matcha"
+        app:cornerRadius="40dp" />
+
+    <TextView
+        android:id="@+id/order_level_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/order_level_select_cafe"
         android:textColor="@color/black"
         android:fontFamily="@font/nunito_bold" />
 
@@ -54,50 +80,64 @@
         android:paddingTop="12dp"
         android:paddingBottom="12dp" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cart_summary_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="@color/white">
-
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cart_summary_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/white">
 
-            <TextView
-                android:id="@+id/cart_summary_title"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:fontFamily="@font/poppins_semibold"
-                android:textSize="18sp" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <TextView
-                android:id="@+id/cart_summary_total"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/nunito_bold" />
+                <TextView
+                    android:id="@+id/cart_summary_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textSize="18sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cart_summary_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/order_view_cart"
-                android:textAllCaps="false"
-                android:backgroundTint="@color/matcha"
-                android:textColor="@color/beige"
-                app:cornerRadius="40dp" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/cart_summary_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/nunito_bold" />
 
-</LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cart_summary_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/order_view_cart"
+                    android:textAllCaps="false"
+                    android:backgroundTint="@color/matcha"
+                    android:textColor="@color/beige"
+                    app:cornerRadius="40dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/cart_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/matcha"
+        android:text="@string/order_view_cart"
+        android:textAllCaps="false"
+        android:textColor="@color/beige"
+        android:visibility="gone" />
+
+</FrameLayout>

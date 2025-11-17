@@ -14,12 +14,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.myapplication.adapter.CafeSelectionAdapter
 import com.example.myapplication.adapter.CartItemAdapter
-import com.example.myapplication.adapter.MenuSectionAdapter
+import com.example.myapplication.adapter.MenuHeaderAdapter
+import com.example.myapplication.adapter.MenuItemAdapter
 import com.example.myapplication.data.CartManager
 import com.example.myapplication.data.CartManager.CartConflictException
 import com.example.myapplication.data.OrderRepository
 import com.example.myapplication.data.UserSessionManager
+import com.example.myapplication.model.CafeMenuGroup
 import com.example.myapplication.model.CartState
 import com.example.myapplication.model.MenuItem
 import com.example.myapplication.model.MenuSection
@@ -27,23 +30,40 @@ import com.example.myapplication.model.OrderRequest
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
 class OrderFragment : Fragment() {
 
-    private lateinit var menuRecycler: RecyclerView
+    private lateinit var orderRecycler: RecyclerView
     private lateinit var loadingView: ProgressBar
     private lateinit var emptyState: TextView
+    private lateinit var levelIndicator: TextView
+    private lateinit var backButton: MaterialButton
     private lateinit var cartCard: MaterialCardView
     private lateinit var cartTitle: TextView
     private lateinit var cartTotal: TextView
     private lateinit var cartButton: MaterialButton
-    private lateinit var cartAdapter: CartItemAdapter
+    private lateinit var cartFab: ExtendedFloatingActionButton
 
-    private val menuSectionAdapter = MenuSectionAdapter { section, item ->
+    private val cafeAdapter = CafeSelectionAdapter { group ->
+        showMenusForCafe(group)
+    }
+
+    private val menuHeaderAdapter = MenuHeaderAdapter { section ->
+        showItemsForMenu(section)
+    }
+
+    private val menuItemAdapter = MenuItemAdapter { item ->
+        val section = currentMenuSection ?: return@MenuItemAdapter
         addItemToCart(section, item)
     }
+
+    private var menuGroups: List<CafeMenuGroup> = emptyList()
+    private var currentCafeGroup: CafeMenuGroup? = null
+    private var currentMenuSection: MenuSection? = null
+    private var currentLevel: HierarchyLevel = HierarchyLevel.CAFE
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,19 +75,23 @@ class OrderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        menuRecycler = view.findViewById(R.id.order_menu_list)
+        orderRecycler = view.findViewById(R.id.order_menu_list)
         loadingView = view.findViewById(R.id.order_loading)
         emptyState = view.findViewById(R.id.order_empty_state)
+        levelIndicator = view.findViewById(R.id.order_level_indicator)
+        backButton = view.findViewById(R.id.order_back_button)
         cartCard = view.findViewById(R.id.cart_summary_card)
         cartTitle = view.findViewById(R.id.cart_summary_title)
         cartTotal = view.findViewById(R.id.cart_summary_total)
         cartButton = view.findViewById(R.id.cart_summary_button)
+        cartFab = view.findViewById(R.id.cart_fab)
 
-        menuRecycler.layoutManager = LinearLayoutManager(requireContext())
-        menuRecycler.adapter = menuSectionAdapter
-        menuRecycler.itemAnimator = null
+        orderRecycler.layoutManager = LinearLayoutManager(requireContext())
+        orderRecycler.itemAnimator = null
 
         cartButton.setOnClickListener { showCartBottomSheet() }
+        cartFab.setOnClickListener { showCartBottomSheet() }
+        backButton.setOnClickListener { navigateUpOneLevel() }
 
         loadMenus()
         updateCartSummary()
@@ -77,9 +101,8 @@ class OrderFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             setLoading(true)
             try {
-                val sections = OrderRepository.getMenuSections()
-                menuSectionAdapter.submitList(sections)
-                emptyState.isVisible = sections.isEmpty()
+                menuGroups = OrderRepository.getMenuHierarchy()
+                showCafeLevel()
             } catch (error: Throwable) {
                 Log.e(TAG, "Failed to load menus", error)
                 emptyState.isVisible = true
@@ -92,7 +115,56 @@ class OrderFragment : Fragment() {
 
     private fun setLoading(loading: Boolean) {
         loadingView.isVisible = loading
-        menuRecycler.isVisible = !loading
+        orderRecycler.isVisible = !loading
+    }
+
+    private fun showCafeLevel() {
+        currentLevel = HierarchyLevel.CAFE
+        currentCafeGroup = null
+        currentMenuSection = null
+        orderRecycler.adapter = cafeAdapter
+        cafeAdapter.submitList(menuGroups)
+        emptyState.isVisible = menuGroups.isEmpty()
+        emptyState.text = getString(R.string.order_no_cafes)
+        levelIndicator.text = getString(R.string.order_level_select_cafe)
+        backButton.isVisible = false
+    }
+
+    private fun showMenusForCafe(group: CafeMenuGroup) {
+        currentLevel = HierarchyLevel.MENU
+        currentCafeGroup = group
+        currentMenuSection = null
+        orderRecycler.adapter = menuHeaderAdapter
+        menuHeaderAdapter.submitList(group.menus)
+        emptyState.isVisible = group.menus.isEmpty()
+        emptyState.text = getString(R.string.order_no_menus_for_cafe, group.cafeName)
+        levelIndicator.text = getString(R.string.order_level_select_menu, group.cafeName)
+        backButton.isVisible = true
+        backButton.text = getString(R.string.order_back_to_cafes)
+    }
+
+    private fun showItemsForMenu(section: MenuSection) {
+        currentLevel = HierarchyLevel.ITEM
+        currentMenuSection = section
+        orderRecycler.adapter = menuItemAdapter
+        menuItemAdapter.submitList(section.items)
+        emptyState.isVisible = section.items.isEmpty()
+        emptyState.text = getString(R.string.order_no_items_for_menu, section.menuName)
+        levelIndicator.text = getString(
+            R.string.order_level_select_items,
+            section.menuName,
+            section.cafeName
+        )
+        backButton.isVisible = true
+        backButton.text = getString(R.string.order_back_to_menus)
+    }
+
+    private fun navigateUpOneLevel() {
+        when (currentLevel) {
+            HierarchyLevel.ITEM -> currentCafeGroup?.let { showMenusForCafe(it) }
+            HierarchyLevel.MENU -> showCafeLevel()
+            HierarchyLevel.CAFE -> Unit
+        }
     }
 
     private fun addItemToCart(section: MenuSection, item: MenuItem) {
@@ -122,8 +194,10 @@ class OrderFragment : Fragment() {
 
     private fun updateCartSummary() {
         val state = CartManager.getCartState(requireContext())
-        cartCard.isVisible = state.items.isNotEmpty()
-        if (state.items.isEmpty()) {
+        val hasItems = state.items.isNotEmpty()
+        cartCard.isVisible = hasItems
+        cartFab.isVisible = hasItems
+        if (!hasItems) {
             return
         }
         val cafeName = state.cafeName ?: getString(R.string.order_unknown_cafe)
@@ -271,5 +345,11 @@ class OrderFragment : Fragment() {
 
     companion object {
         private const val TAG = "OrderFragment"
+    }
+
+    private enum class HierarchyLevel {
+        CAFE,
+        MENU,
+        ITEM
     }
 }

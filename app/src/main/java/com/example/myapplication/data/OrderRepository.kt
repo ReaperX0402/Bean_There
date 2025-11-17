@@ -5,6 +5,7 @@ import com.example.myapplication.model.MenuItem
 import com.example.myapplication.model.MenuSection
 import com.example.myapplication.model.OrderRequest
 import com.example.myapplication.model.Cafe
+import com.example.myapplication.model.CafeMenuGroup
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
@@ -50,14 +51,30 @@ object OrderRepository {
         @SerialName("order_id") val orderId: String
     )
 
-    suspend fun getMenuSections(): List<MenuSection> = withContext(Dispatchers.IO) {
-        client.from("menu")
+    suspend fun getMenuHierarchy(): List<CafeMenuGroup> = withContext(Dispatchers.IO) {
+        val sections = client.from("menu")
             .select(columns = Columns.raw("*, cafe(*), item(*)")) {
                 order(column = "name", order = Order.ASCENDING)
             }
             .decodeList<MenuResponse>()
             .map { it.toSection() }
             .filter { it.menu.isActive }
+
+        sections
+            .groupBy { section -> section.cafeId to section.cafeName }
+            .mapNotNull { (key, menuList) ->
+                val filteredMenus = menuList.filter { it.items.isNotEmpty() }
+                if (filteredMenus.isEmpty()) {
+                    null
+                } else {
+                    CafeMenuGroup(
+                        cafeId = key.first,
+                        cafeName = key.second,
+                        menus = filteredMenus
+                    )
+                }
+            }
+            .sortedBy { it.cafeName }
     }
 
     suspend fun placeOrder(request: OrderRequest): String = withContext(Dispatchers.IO) {

@@ -144,6 +144,14 @@
     <string name="order_title">ORDER &amp; PAY</string>
     <string name="order_subtitle">Browse menus from your favourite cafés.</string>
     <string name="order_empty_state">Menus will appear here soon.</string>
+    <string name="order_level_select_cafe">Choose a café to see its menus.</string>
+    <string name="order_level_select_menu">Menus available at %1$s</string>
+    <string name="order_level_select_items">%1$s at %2$s</string>
+    <string name="order_no_cafes">Menus will appear here soon.</string>
+    <string name="order_no_menus_for_cafe">%1$s has no menus yet.</string>
+    <string name="order_no_items_for_menu">No items found for %1$s.</string>
+    <string name="order_back_to_cafes">Back to cafés</string>
+    <string name="order_back_to_menus">Back to menus</string>
     <string name="order_price_format">RM %.2f</string>
     <string name="order_add_to_cart">Add</string>
     <string name="order_unavailable">Sold out</string>
@@ -165,4 +173,14 @@
     <string name="order_checkout_success">Your order is on its way!</string>
     <string name="order_checkout_failure">We could not place your order. Please try again.</string>
     <string name="order_remove">Remove</string>
+
+    <plurals name="order_menu_count">
+        <item quantity="one">%d menu available</item>
+        <item quantity="other">%d menus available</item>
+    </plurals>
+
+    <plurals name="order_item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
 </resources>

@@ -45,6 +45,15 @@ data class MenuSection(
     val menuDescription: String? get() = menu.description
 }
 
+data class CafeMenuGroup(
+    val cafeId: String,
+    val cafeName: String,
+    val menus: List<MenuSection>
+) {
+    val menuCount: Int get() = menus.size
+    val hasMenus: Boolean get() = menus.isNotEmpty()
+}
+
 @Serializable
 data class CartItem(
     val itemId: String,
