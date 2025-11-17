@@ -46,6 +46,7 @@ class OrderFragment : Fragment() {
     private lateinit var cartTotal: TextView
     private lateinit var cartButton: MaterialButton
     private lateinit var cartFab: ExtendedFloatingActionButton
+    private lateinit var cartAdapter: CartItemAdapter
 
     private val cafeAdapter = CafeSelectionAdapter { group ->
         showMenusForCafe(group)

@@ -56,10 +56,11 @@ class Wishlist : Fragment() {
     }
 
     private fun loadWishlist() {
+        val ctx = context ?: return
         val userId = UserSessionManager.getUserId(requireContext())
         if (userId.isNullOrBlank()) {
             wishlistAdapter.submitList(emptyList())
-            Toast.makeText(requireContext(), R.string.wishlist_requires_login, Toast.LENGTH_SHORT)
+            Toast.makeText(ctx, R.string.wishlist_requires_login, Toast.LENGTH_SHORT)
                 .show()
             return
         }
@@ -71,7 +72,7 @@ class Wishlist : Fragment() {
                 wishlistAdapter.submitList(wishlist)
             } catch (error: Throwable) {
                 Log.e(TAG, "Failed to load wishlist", error)
-                Toast.makeText(requireContext(), R.string.error_generic, Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, R.string.error_generic, Toast.LENGTH_SHORT).show()
             }
         }
     }
