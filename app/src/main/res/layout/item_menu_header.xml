@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textColor="@color/black"
-            android:fontFamily="@font/nunito_regular" />
+            android:fontFamily="@font/nunito" />
 
         <TextView
             android:id="@+id/menu_header_item_count"
