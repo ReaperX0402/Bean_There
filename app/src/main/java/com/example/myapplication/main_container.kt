@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.myapplication.model.Cafe
+import com.example.myapplication.order.OrderFragment
 
 class MainContainer : AppCompatActivity() {
 
@@ -87,7 +88,7 @@ class MainContainer : AppCompatActivity() {
 
         val fragment = when (destination) {
             Destination.SEARCH -> SearchCafe()
-            Destination.NEARBY -> CafeMaps()
+            Destination.ORDER -> OrderFragment()
             Destination.CHALLENGES -> Challenge()
             Destination.WISHLIST -> Wishlist()
             Destination.CHECK_IN -> {
@@ -118,7 +119,7 @@ class MainContainer : AppCompatActivity() {
 
     enum class Destination {
         SEARCH,
-        NEARBY,
+        ORDER,
         CHALLENGES,
         WISHLIST,
         CHECK_IN,
