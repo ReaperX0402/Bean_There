@@ -11,6 +11,7 @@ import com.example.myapplication.R
 import com.example.myapplication.model.MenuItem
 import com.example.myapplication.model.MenuSection
 
+
 class MenuSectionAdapter(
     private val onAddItem: (MenuSection, MenuItem) -> Unit
 ) : RecyclerView.Adapter<MenuSectionAdapter.MenuSectionViewHolder>() {
