@@ -118,16 +118,4 @@
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/cart_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/matcha"
-        android:text="@string/order_view_cart"
-        android:textAllCaps="false"
-        android:textColor="@color/beige"
-        android:visibility="gone" />
-
 </FrameLayout>
