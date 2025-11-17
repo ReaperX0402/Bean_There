@@ -7,7 +7,7 @@
     <string name="plus50">+50</string>
     <string name="explore">EXPLORE</string>
     <string name="search_cafe">SEARCH CAFE</string>
-    <string name="nearby_cafes">NEARBY CAFES</string>
+    <string name="nearby_cafes">ORDER &amp; PAY</string>
     <string name="challenges">CHALLENGES</string>
     <string name="wishlist">WISHLIST</string>
     <string name="check_in">CHECK IN</string>
@@ -141,4 +141,28 @@
     <string name="edit_profile_back">Back to Profile</string>
     <string name="hint_new_password">New Password (optional)</string>
     <string name="hint_confirm_new_password">Confirm New Password</string>
+    <string name="order_title">ORDER &amp; PAY</string>
+    <string name="order_subtitle">Browse menus from your favourite cafés.</string>
+    <string name="order_empty_state">Menus will appear here soon.</string>
+    <string name="order_price_format">RM %.2f</string>
+    <string name="order_add_to_cart">Add</string>
+    <string name="order_unavailable">Sold out</string>
+    <string name="order_view_cart">View cart</string>
+    <string name="order_cart_summary_title">%1$s · %2$d items</string>
+    <string name="order_total_format">RM %.2f</string>
+    <string name="order_unknown_cafe">Selected café</string>
+    <string name="order_add_success">%1$s added to cart.</string>
+    <string name="order_cart_other_cafe">You already have items from %1$s. Please checkout or clear your cart first.</string>
+    <string name="order_add_error">We could not add this item. Try again.</string>
+    <string name="order_cart_empty_message">Your cart is empty.</string>
+    <string name="order_load_error">Unable to load menus right now.</string>
+    <string name="order_notes_hint">Add a note (optional)</string>
+    <string name="order_pax_hint">Number of guests</string>
+    <string name="order_total_label">Total</string>
+    <string name="order_checkout">Checkout</string>
+    <string name="order_clear_cart">Clear cart</string>
+    <string name="order_checkout_requires_login">Log in to place an order.</string>
+    <string name="order_checkout_success">Your order is on its way!</string>
+    <string name="order_checkout_failure">We could not place your order. Please try again.</string>
+    <string name="order_remove">Remove</string>
 </resources>
