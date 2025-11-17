@@ -2,7 +2,6 @@ package com.example.myapplication.data
 
 import com.example.myapplication.model.Reward
 import com.example.myapplication.model.UserVoucher
-import io.github.jan.supabase.postgrest.delete
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.Dispatchers
