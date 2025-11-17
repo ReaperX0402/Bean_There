@@ -87,11 +87,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:cornerRadius="10dp"
             android:text="@string/order_remove"
             android:textAllCaps="false"
             android:textColor="@color/matcha"
-            android:backgroundTint="@android:color/transparent" />
+            android:background="@drawable/bg_remove_button"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            app:cornerRadius="10dp" />
 
     </LinearLayout>
 
