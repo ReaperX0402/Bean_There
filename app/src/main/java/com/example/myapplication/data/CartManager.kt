@@ -1,6 +1,7 @@
 package com.example.myapplication.data
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.edit
 import com.example.myapplication.model.CartItem
 import com.example.myapplication.model.CartState
@@ -13,6 +14,7 @@ object CartManager {
 
     class CartConflictException(val existingCafeName: String?) : IllegalStateException()
 
+    private const val TAG = "CartManager"
     private const val PREFS_NAME = "order_cart"
     private const val KEY_CART_STATE = "cart_state"
 
@@ -22,10 +24,15 @@ object CartManager {
     }
 
     fun getCartState(context: Context): CartState {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = prefs(context)
         val stored = prefs.getString(KEY_CART_STATE, null) ?: return CartState()
-        return runCatching { json.decodeFromString(CartState.serializer(), stored) }
-            .getOrElse { CartState() }
+        return try {
+            json.decodeFromString(CartState.serializer(), stored)
+        } catch (error: Throwable) {
+            Log.e(TAG, "Failed to decode stored cart state, clearing cache", error)
+            prefs.edit { remove(KEY_CART_STATE) }
+            CartState()
+        }
     }
 
     fun addItem(
@@ -61,8 +68,10 @@ object CartManager {
             cafeName = cafeName,
             items = updatedItems
         )
-        persistCart(context, newState)
-        return Result.success(newState)
+        return runCatching {
+            persistCart(context, newState)
+            newState
+        }
     }
 
     fun updateQuantity(context: Context, itemId: String, quantity: Int): CartState {
@@ -83,8 +92,14 @@ object CartManager {
             current.copy(items = updatedItems)
         }
 
-        persistCart(context, newState)
-        return newState
+        return try {
+            persistCart(context, newState)
+            newState
+        } catch (error: Throwable) {
+            Log.e(TAG, "Failed to persist cart quantity change", error)
+            clearCart(context)
+            CartState()
+        }
     }
 
     fun removeItem(context: Context, itemId: String): CartState {
@@ -92,17 +107,19 @@ object CartManager {
     }
 
     fun clearCart(context: Context) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit { remove(KEY_CART_STATE) }
+        prefs(context).edit { remove(KEY_CART_STATE) }
     }
 
     private fun persistCart(context: Context, state: CartState) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = prefs(context)
         if (state.items.isEmpty()) {
             prefs.edit { remove(KEY_CART_STATE) }
         } else {
-            val encoded = json.encodeToString(state)
+            val encoded = json.encodeToString(CartState.serializer(), state)
             prefs.edit { putString(KEY_CART_STATE, encoded) }
         }
     }
+
+    private fun prefs(context: Context) =
+        context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 }

@@ -3,10 +3,8 @@ package com.example.myapplication.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.example.myapplication.R
 import com.example.myapplication.model.CartItem
 import com.google.android.material.button.MaterialButton
@@ -41,7 +39,6 @@ class CartItemAdapter(
         private val onQuantityChanged: (CartItem, Int) -> Unit,
         private val onRemoveItem: (CartItem) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
-        private val itemImage: ImageView = itemView.findViewById(R.id.cart_item_image)
         private val itemName: TextView = itemView.findViewById(R.id.cart_item_name)
         private val itemPrice: TextView = itemView.findViewById(R.id.cart_item_price)
         private val itemTotal: TextView = itemView.findViewById(R.id.cart_item_total)
@@ -56,11 +53,6 @@ class CartItemAdapter(
             itemPrice.text = context.getString(R.string.order_price_format, item.price)
             itemTotal.text = context.getString(R.string.order_price_format, item.lineTotal)
             quantityText.text = item.quantity.toString()
-            itemImage.load(item.imageUrl) {
-                crossfade(true)
-                placeholder(R.drawable.contact2)
-                error(R.drawable.contact2)
-            }
 
             increaseButton.setOnClickListener {
                 onQuantityChanged(item, item.quantity + 1)

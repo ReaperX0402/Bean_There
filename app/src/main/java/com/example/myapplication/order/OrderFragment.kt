@@ -30,7 +30,6 @@ import com.example.myapplication.model.OrderRequest
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
@@ -44,9 +43,6 @@ class OrderFragment : Fragment() {
     private lateinit var cartCard: MaterialCardView
     private lateinit var cartTitle: TextView
     private lateinit var cartTotal: TextView
-    private lateinit var cartButton: MaterialButton
-    private lateinit var cartFab: ExtendedFloatingActionButton
-    private lateinit var cartAdapter: CartItemAdapter
 
     private val cafeAdapter = CafeSelectionAdapter { group ->
         showMenusForCafe(group)
@@ -84,14 +80,11 @@ class OrderFragment : Fragment() {
         cartCard = view.findViewById(R.id.cart_summary_card)
         cartTitle = view.findViewById(R.id.cart_summary_title)
         cartTotal = view.findViewById(R.id.cart_summary_total)
-        cartButton = view.findViewById(R.id.cart_summary_button)
-        cartFab = view.findViewById(R.id.cart_fab)
 
         orderRecycler.layoutManager = LinearLayoutManager(requireContext())
         orderRecycler.itemAnimator = null
 
-        cartButton.setOnClickListener { showCartBottomSheet() }
-        cartFab.setOnClickListener { showCartBottomSheet() }
+        cartCard.setOnClickListener { showCartBottomSheet() }
         backButton.setOnClickListener { navigateUpOneLevel() }
 
         loadMenus()
@@ -197,7 +190,7 @@ class OrderFragment : Fragment() {
         val state = CartManager.getCartState(requireContext())
         val hasItems = state.items.isNotEmpty()
         cartCard.isVisible = hasItems
-        cartFab.isVisible = hasItems
+        cartCard.isEnabled = hasItems
         if (!hasItems) {
             return
         }
