@@ -32,7 +32,7 @@ class HomePage : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.nearby_cafe_btn).setOnClickListener {
-            openDestination(MainContainer.Destination.NEARBY)
+            openDestination(MainContainer.Destination.ORDER)
         }
 
         findViewById<MaterialButton>(R.id.challenges_btn).setOnClickListener {
